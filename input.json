@@ -1,0 +1,16 @@
+{
+  "parents": [
+    {
+      "name": "John Doe",
+      "preferences": ["Monday", "Tuesday"]
+    },
+    {
+      "name": "Roan Zorge",
+      "preferences": ["Friday"]
+    }
+  ],
+  "days": [
+      "2023-06-02",
+      "2023-06-03"
+  ]
+}
