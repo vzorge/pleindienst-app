@@ -4,7 +4,6 @@ import (
 	"cloud.google.com/go/civil"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httputil"
 	"time"
@@ -17,9 +16,10 @@ type OverblijfReq struct {
 
 func main() {
 
-	http.HandleFunc("/", handlePost())
-
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	//http.HandleFunc("/", handlePost())
+	//
+	//log.Fatal(http.ListenAndServe(":8080", nil))
+	OptimalMatches(getDates(), getParents())
 }
 
 func handlePost() func(writer http.ResponseWriter, request *http.Request) {
@@ -57,33 +57,42 @@ func handlePost() func(writer http.ResponseWriter, request *http.Request) {
 
 func getParents() []Parent {
 	return []Parent{
-		{"A", []time.Weekday{time.Monday, time.Tuesday}},
-		{"B", []time.Weekday{time.Monday}},
-		{"C", []time.Weekday{time.Monday, time.Tuesday, time.Thursday}},
-		{"D", []time.Weekday{}},
-		{"E", []time.Weekday{time.Tuesday}},
-		{"F", []time.Weekday{time.Monday}},
-		{"G", []time.Weekday{time.Tuesday}},
+		{"Amelie Ahmead", []time.Weekday{time.Monday}},
+		{"Anika Varlamov", []time.Weekday{}},
+		{"Chimène Ajaiso", []time.Weekday{time.Monday, time.Thursday}},
+		{"Elio Monteferrante", []time.Weekday{}},
+		{"Jemayrio Bacuna", []time.Weekday{}},
+		{"Noah-Jaxx Knipscheer", []time.Weekday{time.Monday}},
+		{"Normani Martodikromo", []time.Weekday{}},
+		{"Nousha Nikkhah", []time.Weekday{}},
+		{"Roan Zorge", []time.Weekday{}},
+		{"Robin Vis", []time.Weekday{}},
+		{"Sem Bentvelzen", []time.Weekday{}},
+		{"Sophia van der Poel", []time.Weekday{}},
+		{"Victoria Barone", []time.Weekday{time.Monday, time.Thursday}},
+		{"Zoya Tariq", []time.Weekday{time.Tuesday, time.Thursday}},
+		{"Trichayra Ramjiawan", []time.Weekday{}},
 	}
 }
 
 func getDates() []time.Time {
 	return []time.Time{
-		civil.Date{Year: 2023, Month: 6, Day: 1}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 6, Day: 5}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 6, Day: 6}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 6, Day: 8}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 6, Day: 12}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 6, Day: 13}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 6, Day: 15}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 6, Day: 19}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 6, Day: 20}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 6, Day: 22}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 6, Day: 26}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 6, Day: 27}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 6, Day: 29}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 7, Day: 3}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 7, Day: 4}.In(time.UTC),
-		civil.Date{Year: 2023, Month: 7, Day: 6}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 8, Day: 21}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 8, Day: 22}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 8, Day: 24}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 8, Day: 28}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 8, Day: 29}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 8, Day: 31}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 9, Day: 4}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 9, Day: 5}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 9, Day: 7}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 9, Day: 11}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 9, Day: 12}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 9, Day: 14}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 9, Day: 18}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 9, Day: 21}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 9, Day: 25}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 9, Day: 26}.In(time.UTC),
+		civil.Date{Year: 2023, Month: 9, Day: 28}.In(time.UTC),
 	}
 }

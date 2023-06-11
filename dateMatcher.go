@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"golang.org/x/exp/constraints"
 	"golang.org/x/exp/slices"
+	"math/rand"
 	"time"
 )
 
@@ -25,13 +26,21 @@ type MatchResult struct {
 }
 
 func OptimalMatches(days []time.Time, parents []Parent) map[time.Time]MatchResult {
-	matchedDates := matchDays(days, parents)
+	matchedDates := matchDays(copySlice(days), parents)
 
 	matchResult := make(map[time.Time]MatchResult)
-	for t, p := range matchedDates {
+	parentTimes := make(map[string]int)
+	for _, t := range days {
+		p := matchedDates[t]
+		parentTimes[p.Name] = parentTimes[p.Name] + 1
 		pref := len(p.Preferences) == 0 || slices.Contains(p.Preferences, t.Weekday())
 		matchResult[t] = MatchResult{p, pref}
-		fmt.Printf("Matched parents %s to %s. This was %t their preference \n", p.Name, t.Format("Monday, 2006-01-02"), pref)
+		fmt.Printf("%s;%s;%t\n", p.Name, t.Format(time.DateOnly), pref) //"Monday, 2006-01-02"
+	}
+
+	fmt.Println("")
+	for name, times := range parentTimes {
+		fmt.Printf("%s;%d\n", name, times)
 	}
 
 	return matchResult
@@ -42,9 +51,19 @@ func matchDays(allDates []time.Time, parents []Parent) map[time.Time]Parent {
 		return map[time.Time]Parent{}
 	}
 	dates, remainingDates := splitArray(allDates, len(parents))
-	matchedDates := make(map[time.Time]Parent, len(getDates()))
-	for _, p := range getParents() {
+	matchedDates := make(map[time.Time]Parent, len(dates))
+
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(parents), func(i, j int) {
+		parents[i], parents[j] = parents[j], parents[i]
+	})
+	fmt.Printf("length dates %d and length parents %d \n", len(dates), len(parents))
+	for _, p := range parents {
+		if len(dates) == 0 {
+			break
+		}
 		if len(p.Preferences) == 0 {
+
 			matchedDates[dates[0]] = p
 			dates = slices.Delete(dates, 0, 1)
 		} else {
@@ -55,13 +74,14 @@ func matchDays(allDates []time.Time, parents []Parent) map[time.Time]Parent {
 					break
 				} else if i == len(dates)-1 {
 					matchedDates[dates[i]] = p
-					dates = dates[:i+1]
+					dates = dates[:i]
 				}
 			}
 		}
 	}
+	fmt.Printf("length matchedDates %d\n", len(matchedDates))
 
-	matchedDates = tradeDays(matchedDates)
+	matchedDates = tradeDays(matchedDates) // TODO outside this function?
 
 	if len(remainingDates) > 0 {
 		return combineMap(matchedDates, matchDays(remainingDates, parents))
@@ -87,6 +107,12 @@ func tradeDays(dates map[time.Time]Parent) map[time.Time]Parent {
 	return dates
 }
 
+func copySlice(days []time.Time) []time.Time {
+	dest := make([]time.Time, len(days))
+	copy(dest, days)
+	return dest
+}
+
 func combineMap(map1, map2 map[time.Time]Parent) map[time.Time]Parent {
 	combined := map[time.Time]Parent{}
 	for k, v := range map1 {
@@ -101,10 +127,11 @@ func combineMap(map1, map2 map[time.Time]Parent) map[time.Time]Parent {
 func splitArray(arr []time.Time, maxLen int) (left, right []time.Time) {
 	lenArray := len(arr)
 	remLength := min(maxLen, lenArray)
-	left = arr[:remLength+1]
+	fmt.Printf("len array: %d and remLength: %d\n", lenArray, remLength)
+	left = arr[:remLength]
 	right = []time.Time{}
 	if remLength < lenArray {
-		right = arr[remLength+1:]
+		right = arr[remLength:]
 	}
 	return
 }
