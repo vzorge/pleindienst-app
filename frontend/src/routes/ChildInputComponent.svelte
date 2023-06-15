@@ -1,23 +1,19 @@
 <script lang="ts">
-
-    import {Person} from './Person';
+    import {Person} from '$lib/Person';
+    import { modalStore } from '@skeletonlabs/skeleton';
+    import {convertStrToWeekDay, convertWeekDayToStr} from '$lib/WeekDay';
 
     export let parent: any;
-    import { modalStore } from '@skeletonlabs/skeleton';
-    import {WeekDay} from './WeekDay';
 
     const person: Person[] = $modalStore[0].component.props.persons;
 
     const concatSymbol = `:`;
     const daySeparator = ' ';
-    let textPerson = person.map(p => `${p.name}${concatSymbol}${p.preference.join(daySeparator)}`).join('\n');
+    let textPerson = person.map(p => `${p.name}${concatSymbol}${p.preference.map(pref => convertWeekDayToStr(pref)).join(daySeparator)}`).join('\n');
     function onFormSubmit(): void {
         function convertToPerson(input: string): Person {
             const [first, second] = input.split(concatSymbol);
-            console.log('input', input);
-            console.log('first', first);
-            console.log('second', second);
-            const prefs = second ? second.split(daySeparator).map(d => WeekDay[d]) : [];
+            const prefs = second ? second.split(daySeparator).map(d => convertStrToWeekDay(d)) : [];
             return {name: first, preference: prefs};
         }
 

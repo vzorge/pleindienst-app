@@ -15,43 +15,58 @@ func min[T constraints.Ordered](a, b T) T {
 	return b
 }
 
-type Parent struct {
-	Name        string
-	Preferences []time.Weekday
+type Person struct {
+	Name        string         `json:"name"`
+	Preferences []time.Weekday `json:"preferences"`
 }
 
 type MatchResult struct {
-	Parent Parent
-	Happy  bool
+	Date   time.Time `json:"date"`
+	Person Person    `json:"person"`
+	Happy  bool      `json:"happy"`
 }
 
-func OptimalMatches(days []time.Time, parents []Parent) map[time.Time]MatchResult {
-	matchedDates := matchDays(copySlice(days), parents)
+type Times struct {
+	Person Person `json:"person"`
+	Amount int    `json:"amount"`
+}
 
-	matchResult := make(map[time.Time]MatchResult)
+func OptimalMatches(days []time.Time, persons []Person) ([]MatchResult, []Times) {
+	matchedDates := matchDays(copySlice(days), persons)
+
+	result := make([]MatchResult, len(days))
+	//matchResult := make(map[time.Time]MatchResult)
 	parentTimes := make(map[string]int)
-	for _, t := range days {
+	for idx, t := range days {
 		p := matchedDates[t]
 		parentTimes[p.Name] = parentTimes[p.Name] + 1
 		pref := len(p.Preferences) == 0 || slices.Contains(p.Preferences, t.Weekday())
-		matchResult[t] = MatchResult{p, pref}
+		//matchResult[t] = MatchResult{t,p, pref}
+		result[idx] = MatchResult{t, p, pref}
 		fmt.Printf("%s;%s;%t\n", p.Name, t.Format(time.DateOnly), pref) //"Monday, 2006-01-02"
 	}
 
 	fmt.Println("")
-	for name, times := range parentTimes {
-		fmt.Printf("%s;%d\n", name, times)
+	times := make([]Times, len(persons))
+	for idx, p := range persons {
+
+		amount, ok := parentTimes[p.Name]
+		if !ok {
+			amount = 0
+		}
+		times[idx] = Times{p, amount}
+		fmt.Printf("%s;%d\n", p.Name, amount)
 	}
 
-	return matchResult
+	return result, times
 }
 
-func matchDays(allDates []time.Time, parents []Parent) map[time.Time]Parent {
+func matchDays(allDates []time.Time, parents []Person) map[time.Time]Person {
 	if len(allDates) == 0 {
-		return map[time.Time]Parent{}
+		return map[time.Time]Person{}
 	}
 	dates, remainingDates := splitArray(allDates, len(parents))
-	matchedDates := make(map[time.Time]Parent, len(dates))
+	matchedDates := make(map[time.Time]Person, len(dates))
 
 	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(parents), func(i, j int) {
@@ -89,7 +104,7 @@ func matchDays(allDates []time.Time, parents []Parent) map[time.Time]Parent {
 	return matchedDates
 }
 
-func tradeDays(dates map[time.Time]Parent) map[time.Time]Parent {
+func tradeDays(dates map[time.Time]Person) map[time.Time]Person {
 	for t, p := range dates {
 		pref := len(p.Preferences) == 0 || slices.Contains(p.Preferences, t.Weekday())
 		if !pref {
@@ -113,8 +128,8 @@ func copySlice(days []time.Time) []time.Time {
 	return dest
 }
 
-func combineMap(map1, map2 map[time.Time]Parent) map[time.Time]Parent {
-	combined := map[time.Time]Parent{}
+func combineMap(map1, map2 map[time.Time]Person) map[time.Time]Person {
+	combined := map[time.Time]Person{}
 	for k, v := range map1 {
 		combined[k] = v
 	}

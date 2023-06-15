@@ -4,22 +4,28 @@ import (
 	"cloud.google.com/go/civil"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/http/httputil"
 	"time"
 )
 
 type OverblijfReq struct {
-	Parents []Parent
-	Days    []time.Time
+	Persons []Person    `json:"persons"`
+	Days    []time.Time `json:"days"`
+}
+
+type Response struct {
+	Matches []MatchResult `json:"matches"`
+	Times   []Times       `json:"times"`
 }
 
 func main() {
 
-	//http.HandleFunc("/", handlePost())
-	//
-	//log.Fatal(http.ListenAndServe(":8080", nil))
-	OptimalMatches(getDates(), getParents())
+	http.HandleFunc("/api/", handlePost())
+
+	log.Fatal(http.ListenAndServe(":8080", nil))
+	//OptimalMatches(getDates(), getParents())
 }
 
 func handlePost() func(writer http.ResponseWriter, request *http.Request) {
@@ -38,14 +44,14 @@ func handlePost() func(writer http.ResponseWriter, request *http.Request) {
 			return
 		}
 
-		if len(overblijfReq.Parents) == 0 || len(overblijfReq.Days) == 0 {
+		if len(overblijfReq.Persons) == 0 || len(overblijfReq.Days) == 0 {
 			fmt.Println("Empty days or parents")
 			http.Error(writer, "no days or parents", 403)
 			return
 		}
 
-		matches := OptimalMatches(overblijfReq.Days, overblijfReq.Parents)
-		err = json.NewEncoder(writer).Encode(matches)
+		matches, times := OptimalMatches(overblijfReq.Days, overblijfReq.Persons)
+		err = json.NewEncoder(writer).Encode(Response{matches, times})
 		if err != nil {
 			fmt.Print(err)
 			_, err = fmt.Fprintf(writer, "Hello World")
@@ -55,8 +61,8 @@ func handlePost() func(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
-func getParents() []Parent {
-	return []Parent{
+func getPersons() []Person {
+	return []Person{
 		{"Amelie Ahmead", []time.Weekday{time.Monday}},
 		{"Anika Varlamov", []time.Weekday{}},
 		{"Chimène Ajaiso", []time.Weekday{time.Monday, time.Thursday}},

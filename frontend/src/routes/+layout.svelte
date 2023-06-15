@@ -6,7 +6,49 @@
 	// Most of your app wide CSS should be put in this file
 	import '../app.postcss';
     import {Modal} from '@skeletonlabs/skeleton';
+    import Header from './Header.svelte';
 </script>
 
-<slot />
+
+<div class="app">
+    <Header />
+
+    <main>
+        <div class="flex justify-center items-center">
+            <h1 class="h1"><span class="gradient-heading">Pleindienst</span></h1>
+        </div>
+        <slot />
+    </main>
+
+</div>
 <Modal />
+
+<style>
+    .app {
+
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        width: 100%;
+        max-width: 64rem;
+        margin: 0 auto;
+        box-sizing: border-box;
+        justify-items: start;
+    }
+
+    .gradient-heading {
+        @apply bg-clip-text text-transparent box-decoration-clone;
+        /* Direction */
+        @apply bg-gradient-to-br;
+        /* Color Stops */
+        @apply from-primary-500 via-tertiary-500 to-secondary-500;
+    }
+</style>
+

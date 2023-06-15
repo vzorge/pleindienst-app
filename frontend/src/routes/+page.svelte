@@ -1,19 +1,19 @@
 <script lang="ts">
     import {modalStore, RadioGroup, RadioItem, tableMapperValues} from '@skeletonlabs/skeleton';
     import ChildInputComponent from './ChildInputComponent.svelte';
-    import {Person} from './Person';
-    import {WeekDay} from './WeekDay';
-    import {Groups} from './Groups.js';
+    import {Person} from '$lib/Person';
+    import {convertWeekDayToStr, WeekDay} from '$lib/WeekDay';
+    import {Groups} from '$lib/Groups.js';
+    import {MatchingResponse} from '$lib/MatchingResponse';
+    import { resultStore } from '$lib/store';
+
+    const mbBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag, WeekDay.Vrijdag];
+    const obBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag];
 
     let startDate, endDate;
-    let group;
+    let group = undefined;
     let persons: Person[] = [{name: 'Roan', preference: [WeekDay.Maandag, WeekDay.Dinsdag]}, {name: 'Lias', preference: []}, {name: 'Jade', preference: []}];
-    let availableWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag, WeekDay.Vrijdag]
-
-    const personTable  = {
-        head: ['Naam', 'Voorkeuren'],
-        body: tableMapperValues(persons, ['name', 'preference'])
-    }
+    $: availableWeekDays = group === Groups.OB ? obBbWeekDays : mbBbWeekDays;
 
     function openChildDialog() {
         new Promise<Person[]>((resolve) => {
@@ -29,7 +29,6 @@
                 }
             })
         }).then((r: Person[]) => {
-            console.log(r);
             persons = r;
         });
     }
@@ -43,18 +42,58 @@
         }
         persons = persons;
     }
+
+    async function getResults() {
+        const body = {
+            persons: persons.map(p => ({name: p.name, preferences: p.preference})),
+            days: getDateRange()
+        }
+
+        const response = await fetch('api/', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            // TODO foutafhandeling
+        }
+        response.json().then((response : MatchingResponse) => {
+            const sortedMatches = response.matches.sort((l, r) => new Date(l.date).getTime() - new Date(r.date).getTime());
+            resultStore.set({matches: sortedMatches, times: response.times});
+            // TODO store locally?
+        }, reason => {
+            //TODO error handling
+        })
+    }
+
+    function getDateRange(): Date[] {
+        var dateArray = [];
+        var currentDate = new Date(startDate);
+        const end = new Date(endDate);
+        while (currentDate <= end) {
+            const weekDay: WeekDay = currentDate.getDay();
+            console.log(`WeekDay ${weekDay} of date ${currentDate.getDay()}`);
+            if (availableWeekDays.indexOf(weekDay) > -1) {
+                dateArray.push(new Date (currentDate));
+            }
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        return dateArray;
+    }
+
 </script>
 
-<div class="container h-full mx-auto flex justify-center items-center">
+<div class="container mx-auto flex grow justify-center items-start mt-10">
     <div class="space-y-5 flex flex-col">
-        <h1 class="h1"><span class="gradient-heading">Pleindienst</span></h1>
         <p>Kies de start en einddatum en vul de namen en voorkeuren in van de kinderen.</p>
 
         <label class="label">
             <span>Voor welke datums geld het?</span>
             <div class="input-group grid-cols-2 gap-8 px-5 py-3" >
-                <input type="date" class="input" placeholder="Startdatum" value="{startDate}"/>
-                <input type="date" class="input" placeholder="Einddatum" value="{endDate}"/>
+                <input type="date" class="input" placeholder="Startdatum" bind:value="{startDate}"/>
+                <input type="date" class="input" placeholder="Einddatum" bind:value="{endDate}"/>
             </div>
         </label>
         <label class="label">Welke groep wordt ingedeeld?</label>
@@ -63,7 +102,7 @@
             <RadioItem bind:group={group} name="justify" value="{Groups.MB}" class="grow">MB</RadioItem>
             <RadioItem bind:group={group} name="justify" value="{Groups.BB}" class="grow">BB</RadioItem>
         </RadioGroup>
-        <button class="btn variant-filled-primary self-center" on:click={openChildDialog}>Kinderen beheren</button>
+        <button class="btn btn-sm variant-ghost-secondary self-end" on:click={openChildDialog}>Kinderen beheren</button>
 
         <div class="space-y-2">
             <div class="flex justify-between">
@@ -82,7 +121,7 @@
                                 on:keypress
                         >
                             <!--{#if person.preference.includes(day)}<span>(icon)</span>{/if}-->
-                            <span>{day}</span>
+                            <span>{convertWeekDayToStr(day)}</span>
                         </span>
                         {/each}
                     </div>
@@ -90,16 +129,10 @@
             <hr />
             {/each}
         </div>
+        <button class="btn variant-filled-primary" on:click={getResults}>Genereer resultaat</button>
 	</div>
 </div>
 
 <style>
-    .gradient-heading {
-        @apply bg-clip-text text-transparent box-decoration-clone;
-        /* Direction */
-        @apply bg-gradient-to-br;
-        /* Color Stops */
-        @apply from-primary-500 via-tertiary-500 to-secondary-500;
-    }
 
 </style>
