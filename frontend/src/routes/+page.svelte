@@ -40,7 +40,8 @@
 
     function toggleDay(person: Person, day: WeekDay) {
         const idx = person.preference.indexOf(day);
-        if (idx > 0) {
+
+        if (idx > -1) {
             person.preference.splice(idx, 1);
         } else {
             person.preference.push(day);
