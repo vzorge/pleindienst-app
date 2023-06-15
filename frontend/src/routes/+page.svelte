@@ -5,21 +5,26 @@
     import {convertWeekDayToStr, WeekDay} from '$lib/WeekDay';
     import {Groups} from '$lib/Groups.js';
     import {MatchingResponse} from '$lib/MatchingResponse';
-    import { resultStore } from '$lib/store';
+    import {endDate, group, persons, resultStore, startDate} from '$lib/store';
+    import { goto } from '$app/navigation'
 
     const mbBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag, WeekDay.Vrijdag];
     const obBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag];
 
-    let startDate, endDate;
-    let group = undefined;
-    let persons: Person[] = [{name: 'Roan', preference: [WeekDay.Maandag, WeekDay.Dinsdag]}, {name: 'Lias', preference: []}, {name: 'Jade', preference: []}];
-    $: availableWeekDays = group === Groups.OB ? obBbWeekDays : mbBbWeekDays;
+    // let startDate, endDate;
+    $startDate;
+    $endDate;
+    $group;
+    $persons;
+
+    // let persons: Person[] = [{name: 'Roan', preference: [WeekDay.Maandag, WeekDay.Dinsdag]}, {name: 'Lias', preference: []}, {name: 'Jade', preference: []}];
+    $: availableWeekDays = $group === Groups.OB ? obBbWeekDays : mbBbWeekDays;
 
     function openChildDialog() {
         new Promise<Person[]>((resolve) => {
             const modalChildrenInput = {
                 ref: ChildInputComponent,
-                props: {persons: persons}
+                props: {persons: $persons}
             }
             modalStore.trigger({
                 type: 'component',
@@ -29,7 +34,7 @@
                 }
             })
         }).then((r: Person[]) => {
-            persons = r;
+            $persons = r;
         });
     }
 
@@ -40,12 +45,12 @@
         } else {
             person.preference.push(day);
         }
-        persons = persons;
+        $persons = $persons;
     }
 
     async function getResults() {
         const body = {
-            persons: persons.map(p => ({name: p.name, preferences: p.preference})),
+            persons: $persons.map(p => ({name: p.name, preferences: p.preference})),
             days: getDateRange()
         }
 
@@ -62,7 +67,7 @@
         response.json().then((response : MatchingResponse) => {
             const sortedMatches = response.matches.sort((l, r) => new Date(l.date).getTime() - new Date(r.date).getTime());
             resultStore.set({matches: sortedMatches, times: response.times});
-            // TODO store locally?
+            goto('/result');
         }, reason => {
             //TODO error handling
         })
@@ -70,8 +75,8 @@
 
     function getDateRange(): Date[] {
         var dateArray = [];
-        var currentDate = new Date(startDate);
-        const end = new Date(endDate);
+        var currentDate = new Date($startDate);
+        const end = new Date($endDate);
         while (currentDate <= end) {
             const weekDay: WeekDay = currentDate.getDay();
             console.log(`WeekDay ${weekDay} of date ${currentDate.getDay()}`);
@@ -92,15 +97,15 @@
         <label class="label">
             <span>Voor welke datums geld het?</span>
             <div class="input-group grid-cols-2 gap-8 px-5 py-3" >
-                <input type="date" class="input" placeholder="Startdatum" bind:value="{startDate}"/>
-                <input type="date" class="input" placeholder="Einddatum" bind:value="{endDate}"/>
+                <input type="date" class="input" placeholder="Startdatum" bind:value="{$startDate}"/>
+                <input type="date" class="input" placeholder="Einddatum" bind:value="{$endDate}"/>
             </div>
         </label>
         <label class="label">Welke groep wordt ingedeeld?</label>
         <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary" display="flex">
-            <RadioItem bind:group={group} name="justify" value="{Groups.OB}" class="grow">OB</RadioItem>
-            <RadioItem bind:group={group} name="justify" value="{Groups.MB}" class="grow">MB</RadioItem>
-            <RadioItem bind:group={group} name="justify" value="{Groups.BB}" class="grow">BB</RadioItem>
+            <RadioItem bind:group={$group} name="justify" value="{Groups.OB}" class="grow">OB</RadioItem>
+            <RadioItem bind:group={$group} name="justify" value="{Groups.MB}" class="grow">MB</RadioItem>
+            <RadioItem bind:group={$group} name="justify" value="{Groups.BB}" class="grow">BB</RadioItem>
         </RadioGroup>
         <button class="btn btn-sm variant-ghost-secondary self-end" on:click={openChildDialog}>Kinderen beheren</button>
 
@@ -110,7 +115,7 @@
                 <span class="font-bold flex">Voorkeuren</span>
             </div>
             <hr class="!border-t-4"/>
-            {#each persons as person}
+            {#each $persons as person}
             <div class="flex justify-between">
                     <div class="flex">{person.name}</div>
                     <div class="flex">

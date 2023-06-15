@@ -3,16 +3,19 @@ import {Person} from './Person';
 import {Groups} from './Groups';
 import {MatchingResponse} from './MatchingResponse';
 import { browser } from "$app/environment";
+import {WeekDay} from './WeekDay';
 
 const personsKey = 'persons';
-export const personStore = writable<Person[]>();
+export const startDate = writable<Date>();
+export const endDate = writable<Date>();
+export const persons = writable<Person[]>([{name: 'Roan', preference: [WeekDay.Maandag, WeekDay.Dinsdag]}, {name: 'Lias', preference: []}, {name: 'Jade', preference: []}]);
 // if (browser) {
 //     personStore.set(JSON.parse(localStorage.getItem(personsKey)))
 //     personStore.subscribe(value => localStorage.setItem('person', JSON.stringify(value)));
 // }
 
 const groupKey = 'group';
-export const groupStore = writable<Groups>();
+export const group = writable<Groups>();
 // if (browser) {
 //     groupStore.set(Groups[localStorage.getItem(groupKey)]);
 //     groupStore.subscribe(value => localStorage.setItem(groupKey, value));

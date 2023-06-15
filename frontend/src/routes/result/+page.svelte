@@ -25,8 +25,13 @@
     function tableMatchMapper() {
         const result = [];
         for (const match of matches) {
-            const date = new Date(match.date).toLocaleDateString('nl');
-            result.push([date, match.person.name, match.happy]);
+            const date = new Date(match.date).toLocaleDateString('nl', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            result.push([date, match.person.name, match.happy ? 'Ja' : 'Nee']);
         }
         return result;
     }
