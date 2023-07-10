@@ -31,7 +31,6 @@ function matchDays(allDates: Date[], persons: Person[]): Match[] {
     const [dates, remainingDates] = splitArray(allDates, persons.length);
 
     shuffleArray(persons);
-    console.log('persons:' + persons.length);
     let matchedDates: Match[] = [];
     for (const person of persons) {
         if (dates.length === 0 ) {
@@ -51,11 +50,7 @@ function matchDays(allDates: Date[], persons: Person[]): Match[] {
 
         }
     }
-    console.log('persons 2:' + persons.length);
-    console.log('matchedDays:' + matchedDates.length);
     matchedDates = tradeDays(matchedDates);
-
-    console.log('matchedDays 2:' + matchedDates.length);
 
     if (remainingDates.length > 0) {
         return [...matchedDates, ...matchDays(remainingDates, persons)];
