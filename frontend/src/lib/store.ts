@@ -1,7 +1,7 @@
 import {writable} from 'svelte/store';
 import {Person} from './Person';
 import {Groups} from './Groups';
-import {MatchingResponse} from './MatchingResponse';
+import { MatchingResponse } from './MatchingResponse';
 import { browser } from "$app/environment";
 import {WeekDay} from './WeekDay';
 

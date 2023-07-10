@@ -1,10 +1,9 @@
 <script lang="ts">
-    import {modalStore, RadioGroup, RadioItem, tableMapperValues} from '@skeletonlabs/skeleton';
+    import {modalStore, RadioGroup, RadioItem} from '@skeletonlabs/skeleton';
     import ChildInputComponent from './ChildInputComponent.svelte';
     import {Person} from '$lib/Person';
     import {convertWeekDayToStr, WeekDay} from '$lib/WeekDay';
     import {Groups} from '$lib/Groups.js';
-    import {MatchingResponse} from '$lib/MatchingResponse';
     import {endDate, group, persons, resultStore, startDate} from '$lib/store';
     import { goto } from '$app/navigation'
 
@@ -51,11 +50,11 @@
 
     async function getResults() {
         const body = {
-            persons: $persons.map(p => ({name: p.name, preferences: p.preference})),
+            persons: $persons,
             days: getDateRange()
         }
 
-        const response = await fetch('api/', {
+        const response = await fetch('/matching', {
             method: 'POST',
             body: JSON.stringify(body),
             headers: {
@@ -65,9 +64,9 @@
         if (!response.ok) {
             // TODO foutafhandeling
         }
-        response.json().then((response : MatchingResponse) => {
-            const sortedMatches = response.matches.sort((l, r) => new Date(l.date).getTime() - new Date(r.date).getTime());
-            resultStore.set({matches: sortedMatches, times: response.times});
+        response.json().then(({ matches, times }) => {
+            const sortedMatches = matches.sort((l, r) => new Date(l.day).getTime() - new Date(r.day).getTime());
+            resultStore.set({matches: sortedMatches, times: times});
             goto('/result');
         }, reason => {
             //TODO error handling
@@ -92,14 +91,14 @@
 </script>
 
 <div class="container mx-auto flex grow justify-center items-start mt-10">
-    <div class="space-y-5 flex flex-col">
+    <form class="space-y-5 flex flex-col">
         <p>Kies de start en einddatum en vul de namen en voorkeuren in van de kinderen.</p>
 
         <label class="label">
             <span>Voor welke datums geld het?</span>
             <div class="input-group grid-cols-2 gap-8 px-5 py-3" >
-                <input type="date" class="input" placeholder="Startdatum" bind:value="{$startDate}"/>
-                <input type="date" class="input" placeholder="Einddatum" bind:value="{$endDate}"/>
+                <input type="date" class="input" placeholder="Startdatum" bind:value="{$startDate}" required />
+                <input type="date" class="input" placeholder="Einddatum" bind:value="{$endDate}" required />
             </div>
         </label>
         <label class="label">Welke groep wordt ingedeeld?</label>
@@ -136,7 +135,7 @@
             {/each}
         </div>
         <button class="btn variant-filled-primary" on:click={getResults}>Genereer resultaat</button>
-	</div>
+	</form>
 </div>
 
 <style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Table, tableMapperValues} from '@skeletonlabs/skeleton';
+    import {Table} from '@skeletonlabs/skeleton';
     import {Match, MatchingResponse, Times} from '$lib/MatchingResponse';
     import {resultStore} from '$lib/store';
 
