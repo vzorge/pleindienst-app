@@ -19,11 +19,8 @@
 
         if ($modalStore[0].response) {
             let convert = textPerson.split('\n');
-            console.log('textPerson', textPerson);
-            console.log('convert', convert);
-            $modalStore[0].response(convert.map(i => {
-                console.log('i', i);
-                return convertToPerson(i);
+            $modalStore[0].response(convert.filter(i => i.trim() !== "").map(i => {
+                return convertToPerson(i.trim());
             }));
         }
         modalStore.close();
@@ -34,8 +31,9 @@
 {#if $modalStore[0]}
 <div class="modal-example-form card p-4 w-modal shadow-xl space-y-4">
     <header class="text-2xl font-bold">Namen aanpassen</header>
-    <!-- Enable for debugging: -->
+
     <form class="modal-form p-4 space-y-4 rounded-container-token">
+        <span>Vul één naam in per regel.</span>
         <textarea class="textarea" bind:value="{textPerson}" rows="{person.length + 5}"></textarea>
     </form>
 
