@@ -1,4 +1,5 @@
-import {Person} from './Person';
+import type {Person} from './Person';
+import type {Times} from '$lib/Times';
 
 export class Match {
     date: Date;
@@ -10,11 +11,6 @@ export class Match {
         this.person = match.person;
         this.happy = match.happy;
     }
-}
-
-export class Times {
-    person: Person;
-    amount: number;
 }
 
 export class MatchingResponse {

@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	plugins: [sveltekit()],
     optimizeDeps: {
-        include: ['papaparse']
+        include: ['papaparse', '@skeletonlabs/skeleton']
     },
     server: {
         proxy: {

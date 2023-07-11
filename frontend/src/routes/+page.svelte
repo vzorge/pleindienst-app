@@ -1,7 +1,8 @@
 <script lang="ts">
     import {modalStore, RadioGroup, RadioItem} from '@skeletonlabs/skeleton';
     import ChildInputComponent from './ChildInputComponent.svelte';
-    import {Person} from '$lib/Person';
+    import DatePopup from './DatePopup.svelte';
+    import type {Person} from '$lib/Person';
     import {convertWeekDayToStr, WeekDay} from '$lib/WeekDay';
     import {Groups} from '$lib/Groups.js';
     import {group, persons, resultStore} from '$lib/store';
@@ -16,7 +17,6 @@
     $persons;
     $group;
 
-    // let persons: Person[] = [{name: 'Roan', preference: [WeekDay.Maandag, WeekDay.Dinsdag]}, {name: 'Lias', preference: []}, {name: 'Jade', preference: []}];
     $: availableWeekDays = $group.name === Groups.OB ? obBbWeekDays : mbBbWeekDays;
 
     function openChildDialog() {
@@ -85,7 +85,10 @@
 
 <div class="container mx-auto flex grow justify-center items-start mt-10">
     <form class="space-y-5 flex flex-col">
-        <p>Kies de start en einddatum en vul de namen en voorkeuren in van de kinderen.</p>
+        <p>Kies de start en einddatum en vul de namen en voorkeuren in van de kinderen.
+        <br/>
+            Het is ook mogelijk om op te geven vanaf wanneer iemand meegeteld moet worden.
+        </p>
 
 <!--        <label class="label">-->
 <!--            <span>Voor welke datums geld het?</span>-->
@@ -116,28 +119,31 @@
                 <span class="font-bold flex">Voorkeuren</span>
             </div>
             <hr class="!border-t-4"/>
-            {#each $persons as person}
-            <div class="flex justify-between">
-                    <div class="flex">{person.name}</div>
-                    <div class="flex">
-                        {#each availableWeekDays as day}
-                        <span
-                                class="chip {person.preference.includes(day) ? 'variant-filled' : 'variant-soft'}"
-                                on:click={() => { toggleDay(person, day) }}
-                                on:keypress
-                        >
-                            <!--{#if person.preference.includes(day)}<span>(icon)</span>{/if}-->
-                            <span>{convertWeekDayToStr(day)}</span>
-                        </span>
-                        {/each}
-                    </div>
+            {#each $persons as person, index (person.name)}
+            <div class="flex justify-center space-x-2">
+                <div class="flex flex-1">{person.name}</div>
+                <div class="flex">
+                    {#each availableWeekDays as day}
+                    <span
+                            class="chip {person.preference.includes(day) ? 'variant-filled' : 'variant-soft'}"
+                            on:click={() => { toggleDay(person, day) }}
+                            on:keypress
+                    >
+                        <!--{#if person.preference.includes(day)}<span>(icon)</span>{/if}-->
+                        <span>{convertWeekDayToStr(day)}</span>
+                    </span>
+                    {/each}
+                </div>
+                <div class="flex">
+                    <DatePopup persons="{$persons}" index="{index}"></DatePopup>
+                </div>
             </div>
-            <hr />
             {/each}
         </div>
         <button class="btn variant-filled-primary" on:click={getResults}>Genereer resultaat</button>
 	</form>
 </div>
+
 
 <style>
 

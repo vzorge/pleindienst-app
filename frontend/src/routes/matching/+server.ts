@@ -1,15 +1,17 @@
-import {Person} from '$lib/Person';
+import type {Person} from '$lib/Person';
 import {json} from '@sveltejs/kit';
-import {Match, Times} from '$lib/MatchingResponse';
+import {Match} from '$lib/MatchingResponse';
+import type { Times } from '$lib/Times';
 
 export async function POST({ request }) {
     console.log('MADE IT to the POST');
     const data: {days: Date[], persons: Person[]} = await request.json();
-    const [matches, times] = match(data.persons, data.days.map(d => new Date(d)));
+    const fixedPersons = data.persons.map(p => ({...p, startFrom: p.startFrom ? new Date(p.startFrom): undefined}));
+    const fixedDays = data.days.map(d => new Date(d));
+    const [matches, times] = match(fixedPersons, fixedDays);
 
     return json({matches, times}, {status: 200});
 }
-
 
 function match(persons: Person[], days: Date[]): [Match[], Times[]] {
     const matches = matchDays(days, persons);
@@ -36,7 +38,7 @@ function matchDays(allDates: Date[], persons: Person[]): Match[] {
         if (dates.length === 0 ) {
             break;
         }
-        if (person.preference.length === 0) {
+        if (person.preference.length === 0 && isAllowedOnDay(person, dates[0])) {
             const date = dates.shift();
             if (date) matchedDates.push({date, person, happy: true});
         } else {
@@ -44,23 +46,29 @@ function matchDays(allDates: Date[], persons: Person[]): Match[] {
             if (preferredDate) {
                 matchedDates.push({date: preferredDate, person, happy: true});
             } else {
-                const date = dates.shift();
-                if (date) matchedDates.push({date, person, happy: false});
+                const firstAvailableIndex = dates.findIndex(d => isAllowedOnDay(person, d));
+                if (firstAvailableIndex > -1) {
+                    const date = dates.splice(firstAvailableIndex, 1)[0];
+                    if (date) matchedDates.push({date, person, happy: false});
+                }
             }
-
         }
     }
     matchedDates = tradeDays(matchedDates);
 
-    if (remainingDates.length > 0) {
-        return [...matchedDates, ...matchDays(remainingDates, persons)];
+    if (dates.length > 0) {
+        console.log('There were dates left, someone must not be allowed to start yet')
+    }
+
+    if (remainingDates.length > 0 || dates.length > 0) {
+        return [...matchedDates, ...matchDays([...dates, ...remainingDates], persons)];
     }
     return matchedDates;
 }
 
 function findPreferredDate(person: Person, dates: Date[]) {
     for (let i = 0; i < dates.length; i++) {
-        if (person.preference.indexOf(dates[i].getDay()) > -1) {
+        if (hasPreference(person, dates[i]) && isAllowedOnDay(person, dates[i])) {
             return dates.splice(i, 1)[0];
         }
     }
@@ -77,6 +85,8 @@ function tradeDays(matched: Match[]): Match[] {
                 const happyOnOtherDay = hasPreference(person2, date);
                 if (hasPreference(person, day2)
                         && person.name !== person2.name
+                        && isAllowedOnDay(person, day2)
+                        && isAllowedOnDay(person2, date)
                         && (happyOnOtherDay || !p2Happy)) {
                     fixedMatched[i] = {date, person: person2, happy: happyOnOtherDay};
                     fixedMatched[j] = {date: day2, person, happy: true};
@@ -93,6 +103,10 @@ function tradeDays(matched: Match[]): Match[] {
 
 function hasPreference(person: Person, day: Date): boolean {
     return person.preference.length === 0 || person.preference.includes(day.getDay());
+}
+
+function isAllowedOnDay(person: Person, day: Date) {
+    return !person.startFrom || day >= person.startFrom;
 }
 
 function splitArray(allDates: Date[], desiredLength: number): [Date[], Date[]] {

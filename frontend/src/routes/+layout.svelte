@@ -3,10 +3,16 @@
 	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
 	// If you have source.organizeImports set to true in VSCode, then it will auto change this ordering
 	import '@skeletonlabs/skeleton/styles/skeleton.css';
-	// Most of your app wide CSS should be put in this file
+    // Floating ui
+    import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
+    import { storePopup } from '@skeletonlabs/skeleton';
+
+    // Most of your app wide CSS should be put in this file
 	import '../app.postcss';
     import {Modal} from '@skeletonlabs/skeleton';
     import Header from './Header.svelte';
+
+    storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 </script>
 
 

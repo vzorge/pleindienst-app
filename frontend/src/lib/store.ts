@@ -2,7 +2,7 @@ import {writable} from 'svelte/store';
 import {MatchingResponse} from './MatchingResponse';
 import {localStorageStore} from '@skeletonlabs/skeleton';
 import {Groups} from '$lib/Groups';
-import {Person} from '$lib/Person';
+import type {Person} from '$lib/Person';
 
 export const startDate = writable<Date>();
 export const endDate = writable<Date>();

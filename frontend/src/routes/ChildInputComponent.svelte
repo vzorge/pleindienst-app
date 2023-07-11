@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Person} from '$lib/Person';
+    import type {Person} from '$lib/Person';
     import { modalStore } from '@skeletonlabs/skeleton';
     import {convertStrToWeekDay, convertWeekDayToStr} from '$lib/WeekDay';
 

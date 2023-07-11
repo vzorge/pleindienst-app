@@ -1,11 +1,12 @@
 <script lang="ts">
     import {Table} from '@skeletonlabs/skeleton';
-    import {Match, MatchingResponse, Times} from '$lib/MatchingResponse';
+    import {Match, MatchingResponse} from '$lib/MatchingResponse';
     import {resultStore, group} from '$lib/store';
     import {CSVDownloader} from 'svelte-csv';
     import vacationDates from '$lib/data/vacationDates.json';
     import {convertWeekDayToStr} from '$lib/WeekDay';
     import {Groups} from '$lib/Groups';
+    import type {Times} from '$lib/Times';
 
     const OB_END_DATE = new Date('2024-02-02');
 
