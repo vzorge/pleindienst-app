@@ -1,0 +1,3 @@
+app_location: ./frontend
+api_location: frontend/build/server
+output_location: build/static
