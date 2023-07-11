@@ -6,18 +6,21 @@
     import {Groups} from '$lib/Groups.js';
     import {endDate, group, persons, resultStore, startDate} from '$lib/store';
     import { goto } from '$app/navigation'
+    import availableDates from '$lib/data/availableDates.json';
 
     const mbBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag, WeekDay.Vrijdag];
     const obBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag];
 
+    const OB_END_DATE = new Date('2024-02-02');
+
     // let startDate, endDate;
     $startDate;
     $endDate;
-    $group;
     $persons;
+    $group;
 
     // let persons: Person[] = [{name: 'Roan', preference: [WeekDay.Maandag, WeekDay.Dinsdag]}, {name: 'Lias', preference: []}, {name: 'Jade', preference: []}];
-    $: availableWeekDays = $group === Groups.OB ? obBbWeekDays : mbBbWeekDays;
+    $: availableWeekDays = $group.name === Groups.OB ? obBbWeekDays : mbBbWeekDays;
 
     function openChildDialog() {
         new Promise<Person[]>((resolve) => {
@@ -74,18 +77,11 @@
     }
 
     function getDateRange(): Date[] {
-        var dateArray = [];
-        var currentDate = new Date($startDate);
-        const end = new Date($endDate);
-        while (currentDate <= end) {
-            const weekDay: WeekDay = currentDate.getDay();
-            console.log(`WeekDay ${weekDay} of date ${currentDate.getDay()}`);
-            if (availableWeekDays.indexOf(weekDay) > -1) {
-                dateArray.push(new Date (currentDate));
-            }
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-        return dateArray;
+        return availableDates
+            .map(d => new Date(d))
+            .filter(date => {
+                return $group.name === Groups.OB ? date.getTime() <= OB_END_DATE.getTime() : true;
+            });
     }
 
 </script>
@@ -94,18 +90,26 @@
     <form class="space-y-5 flex flex-col">
         <p>Kies de start en einddatum en vul de namen en voorkeuren in van de kinderen.</p>
 
-        <label class="label">
-            <span>Voor welke datums geld het?</span>
-            <div class="input-group grid-cols-2 gap-8 px-5 py-3" >
-                <input type="date" class="input" placeholder="Startdatum" bind:value="{$startDate}" required />
-                <input type="date" class="input" placeholder="Einddatum" bind:value="{$endDate}" required />
-            </div>
-        </label>
-        <label class="label">Welke groep wordt ingedeeld?</label>
+<!--        <label class="label">-->
+<!--            <span>Voor welke datums geld het?</span>-->
+<!--            <div class="input-group grid-cols-2 gap-8 px-5 py-3" >-->
+<!--                <input type="date" class="input" placeholder="Startdatum" bind:value="{$startDate}" required />-->
+<!--                <input type="date" class="input" placeholder="Einddatum" bind:value="{$endDate}" required />-->
+<!--            </div>-->
+<!--        </label>-->
+        <span class="label">Welke groep wordt ingedeeld?</span>
         <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary" display="flex">
-            <RadioItem bind:group={$group} name="justify" value="{Groups.OB}" class="grow">OB</RadioItem>
-            <RadioItem bind:group={$group} name="justify" value="{Groups.MB}" class="grow">MB</RadioItem>
-            <RadioItem bind:group={$group} name="justify" value="{Groups.BB}" class="grow">BB</RadioItem>
+            <RadioItem bind:group={$group.name} name="justify" value="{Groups.OB}" class="grow">OB</RadioItem>
+            <RadioItem bind:group={$group.name} name="justify" value="{Groups.MB}" class="grow">MB</RadioItem>
+            <RadioItem bind:group={$group.name} name="justify" value="{Groups.BB}" class="grow">BB</RadioItem>
+        </RadioGroup>
+        <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary" display="flex">
+            <RadioItem bind:group={$group.number} name="justify" value="{1}" class="grow">1</RadioItem>
+            <RadioItem bind:group={$group.number} name="justify" value="{2}" class="grow">2</RadioItem>
+            <RadioItem bind:group={$group.number} name="justify" value="{3}" class="grow">3</RadioItem>
+            <RadioItem bind:group={$group.number} name="justify" value="{4}" class="grow">4</RadioItem>
+            <RadioItem bind:group={$group.number} name="justify" value="{5}" class="grow">5</RadioItem>
+            <RadioItem bind:group={$group.number} name="justify" value="{6}" class="grow">6</RadioItem>
         </RadioGroup>
         <button class="btn btn-sm variant-ghost-secondary self-end" on:click={openChildDialog}>Kinderen beheren</button>
 

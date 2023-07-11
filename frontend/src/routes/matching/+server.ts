@@ -38,14 +38,14 @@ function matchDays(allDates: Date[], persons: Person[]): Match[] {
         }
         if (person.preference.length === 0) {
             const date = dates.shift();
-            matchedDates.push({date, person, happy: true});
+            if (date) matchedDates.push({date, person, happy: true});
         } else {
             const preferredDate = findPreferredDate(person, dates);
             if (preferredDate) {
                 matchedDates.push({date: preferredDate, person, happy: true});
             } else {
                 const date = dates.shift();
-                matchedDates.push({date, person, happy: false});
+                if (date) matchedDates.push({date, person, happy: false});
             }
 
         }

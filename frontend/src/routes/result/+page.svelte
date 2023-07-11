@@ -1,14 +1,46 @@
 <script lang="ts">
     import {Table} from '@skeletonlabs/skeleton';
     import {Match, MatchingResponse, Times} from '$lib/MatchingResponse';
-    import {resultStore} from '$lib/store';
+    import {resultStore, group} from '$lib/store';
+    import {CSVDownloader} from 'svelte-csv';
+    import vacationDates from '$lib/data/vacationDates.json';
+    import {convertWeekDayToStr} from '$lib/WeekDay';
+    import {Groups} from '$lib/Groups';
+
+    const OB_END_DATE = new Date('2024-02-02');
 
     let matches: Match[] = [];
     let times: Times[] = [];
+    let csvData;
+    $group;
     resultStore.subscribe((value: MatchingResponse) => {
         if (value) {
             matches = value.matches;
             times = value.times;
+            csvData = [...value.matches.map(m => {
+                const datum = new Date(m.date);
+                return ({
+                    'Datum': datum,
+                    'Groep': (`${$group.name}${$group.number}`) || 'onbekend',
+                    'Dag': convertWeekDayToStr(datum.getDay()),
+                    'Ouders van:': m.person.name
+                });
+            }),
+                ...vacationDates
+                    .filter(vd => $group.name === Groups.OB ? new Date(vd.date).getTime() <= OB_END_DATE.getTime() : true)
+                    .map(vd => {
+                    const date = new Date(vd.date);
+                    return ({
+                        'Datum': date,
+                        'Groep': ($group.name + $group.number.toString(10)) || 'onbekend',
+                        'Dag': convertWeekDayToStr(date.getDay()),
+                        'Ouders van:': vd.reason
+                    });
+                })
+            ].sort((l, r) => l.Datum.getTime() - r.Datum.getTime())
+                .map(val => ({...val, "Datum": val.Datum.toLocaleDateString('nl-NL')}));
+
+            console.log(csvData);
         }
     });
 
@@ -49,22 +81,12 @@
 <div class="container mx-auto flex grow justify-center items-start mt-10">
     <div class="space-y-6">
         {#if matches.length > 0}
-            <Table source="{tableMatches}" />
-            <hr />
-            <Table source="{tableTimes}" />
+            <CSVDownloader data="{csvData}" bom="{true} filename={'pleindienst.csv'}">Download als csv</CSVDownloader>
+            <Table source="{tableMatches}"/>
+            <hr/>
+            <Table source="{tableTimes}"/>
         {:else}
             <p>Nog geen resultaten. Ga terug naar de invoer</p>
         {/if}
     </div>
 </div>
-
-<style>
-    .gradient-heading {
-        @apply bg-clip-text text-transparent box-decoration-clone;
-        /* Direction */
-        @apply bg-gradient-to-br;
-        /* Color Stops */
-        @apply from-primary-500 via-tertiary-500 to-secondary-500;
-    }
-
-</style>

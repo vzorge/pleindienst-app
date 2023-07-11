@@ -15,7 +15,7 @@ export const persons = writable<Person[]>([{name: 'Roan', preference: [WeekDay.M
 // }
 
 const groupKey = 'group';
-export const group = writable<Groups>();
+export const group = writable<{name: Groups, number: number}>();
 // if (browser) {
 //     groupStore.set(Groups[localStorage.getItem(groupKey)]);
 //     groupStore.subscribe(value => localStorage.setItem(groupKey, value));
