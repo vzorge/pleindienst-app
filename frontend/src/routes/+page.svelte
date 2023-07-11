@@ -4,8 +4,8 @@
     import {Person} from '$lib/Person';
     import {convertWeekDayToStr, WeekDay} from '$lib/WeekDay';
     import {Groups} from '$lib/Groups.js';
-    import {endDate, group, persons, resultStore, startDate} from '$lib/store';
-    import { goto } from '$app/navigation'
+    import {group, persons, resultStore} from '$lib/store';
+    import {goto} from '$app/navigation';
     import availableDates from '$lib/data/availableDates.json';
 
     const mbBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag, WeekDay.Vrijdag];
@@ -13,9 +13,6 @@
 
     const OB_END_DATE = new Date('2024-02-02');
 
-    // let startDate, endDate;
-    $startDate;
-    $endDate;
     $persons;
     $group;
 

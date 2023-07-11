@@ -1,29 +1,13 @@
 import {writable} from 'svelte/store';
-import {Person} from './Person';
-import {Groups} from './Groups';
-import { MatchingResponse } from './MatchingResponse';
-import { browser } from "$app/environment";
-import {WeekDay} from './WeekDay';
+import {MatchingResponse} from './MatchingResponse';
+import {localStorageStore} from '@skeletonlabs/skeleton';
+import {Groups} from '$lib/Groups';
+import {Person} from '$lib/Person';
 
-const personsKey = 'persons';
 export const startDate = writable<Date>();
 export const endDate = writable<Date>();
-export const persons = writable<Person[]>([{name: 'Roan', preference: [WeekDay.Maandag, WeekDay.Dinsdag]}, {name: 'Lias', preference: []}, {name: 'Jade', preference: []}]);
-// if (browser) {
-//     personStore.set(JSON.parse(localStorage.getItem(personsKey)))
-//     personStore.subscribe(value => localStorage.setItem('person', JSON.stringify(value)));
-// }
+export const persons = localStorageStore<Person[]>('persons', []);
 
-const groupKey = 'group';
-export const group = writable<{name: Groups, number: number}>();
-// if (browser) {
-//     groupStore.set(Groups[localStorage.getItem(groupKey)]);
-//     groupStore.subscribe(value => localStorage.setItem(groupKey, value));
-// }
+export const group = localStorageStore<{name?: Groups, number?: number}>('group', {});
 
-const resultKey = 'result';
-export const resultStore = writable<MatchingResponse>();
-// if (browser) {
-//     resultStore.set(JSON.parse(localStorage.getItem(resultKey)));
-//     groupStore.subscribe(value => localStorage.setItem(resultKey, JSON.stringify(value)));
-// }
+export const resultStore = localStorageStore<MatchingResponse>('result', {matches: [], times: []});
