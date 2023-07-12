@@ -146,14 +146,9 @@
             <hr class="!border-dashed"/>
             {/each}
         </div>
-        {#if !!resultStore}
+        {#if $resultStore.matches.length > 0}
             <a href="result/" class="btn variant-filled-primary">Bekijk huidig resultaat</a>
         {/if}
-        <button class="btn {$resultStore ? 'variant-soft-surface' : 'variant-filled-primary'}" on:click={getResults}>Genereer nieuwe resultaten</button>
+        <button class="btn {$resultStore.matches.length > 0 ? 'variant-soft-surface' : 'variant-filled-primary'}" on:click={getResults}>Genereer nieuwe resultaten</button>
 	</form>
 </div>
-
-
-<style>
-
-</style>
