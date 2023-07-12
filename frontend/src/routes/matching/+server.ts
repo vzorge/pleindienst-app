@@ -4,7 +4,6 @@ import {Match} from '$lib/MatchingResponse';
 import type { Times } from '$lib/Times';
 
 export async function POST({ request }) {
-    console.log('MADE IT to the POST');
     const data: {days: Date[], persons: Person[]} = await request.json();
     const fixedPersons = data.persons.map(p => ({...p, startFrom: p.startFrom ? new Date(p.startFrom): undefined}));
     const fixedDays = data.days.map(d => new Date(d));
@@ -14,7 +13,7 @@ export async function POST({ request }) {
 }
 
 function match(persons: Person[], days: Date[]): [Match[], Times[]] {
-    const matches = matchDays(days, persons);
+    const matches = matchDays(days, persons).sort((l, r) => l.date.getTime() - r.date.getTime());
 
     const map = matches.map(m => m.person).reduce((acc: Map<Person, number>, val: Person) => {
         acc.set(val, (acc.get(val) || 0) + 1);

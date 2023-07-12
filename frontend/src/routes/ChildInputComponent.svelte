@@ -39,7 +39,7 @@
 
     <footer class="modal-footer {parent.regionFooter}">
         <button class="btn variant-filled-surface" on:click={modalStore.close}>Annuleren</button>
-        <button class="btn variant-filled-primary" on:click={onFormSubmit}>Namen aanpassen</button>
+        <button class="btn variant-filled-primary" on:click={onFormSubmit}>Opslaan</button>
     </footer>
 </div>
 {/if}

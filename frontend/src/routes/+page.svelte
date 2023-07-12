@@ -16,6 +16,7 @@
 
     $persons;
     $group;
+    $resultStore;
 
     $: availableWeekDays = $group.name === Groups.OB ? obBbWeekDays : mbBbWeekDays;
 
@@ -85,9 +86,11 @@
 
 <div class="container mx-auto flex grow justify-center items-start mt-10">
     <form class="space-y-5 flex flex-col">
-        <p>Kies de start en einddatum en vul de namen en voorkeuren in van de kinderen.
+        <p>Vul de namen en voorkeuren in van de kinderen.
         <br/>
-            Het is ook mogelijk om op te geven vanaf wanneer iemand meegeteld moet worden.
+            Een voorkeursdag is niet verplicht. Als er niks gekozen is, werkt dat hetzelfde alsof je alles gekozen hebt.
+        <br/>
+            Het is ook mogelijk om op te geven vanaf wanneer iemand meegeteld moet worden, klik hiervoor op het datum icoontje achter de dagen.
         </p>
 
 <!--        <label class="label">-->
@@ -140,7 +143,10 @@
             </div>
             {/each}
         </div>
-        <button class="btn variant-filled-primary" on:click={getResults}>Genereer resultaat</button>
+        {#if !!resultStore}
+            <a href="result/" class="btn variant-filled-primary">Bekijk huidig resultaat</a>
+        {/if}
+        <button class="btn {$resultStore ? 'variant-soft-surface' : 'variant-filled-primary'}" on:click={getResults}>Genereer nieuwe resultaten</button>
 	</form>
 </div>
 
