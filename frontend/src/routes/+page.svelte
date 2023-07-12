@@ -90,7 +90,9 @@
         <br/>
             Een voorkeursdag is niet verplicht. Als er niks gekozen is, werkt dat hetzelfde alsof je alles gekozen hebt.
         <br/>
-            Het is ook mogelijk om op te geven vanaf wanneer iemand meegeteld moet worden, klik hiervoor op het datum icoontje achter de dagen.
+            Het is ook mogelijk om op te geven vanaf wanneer iemand meegeteld moet worden,
+        <br/>
+            klik hiervoor op het datum icoontje achter de dagen.
         </p>
 
 <!--        <label class="label">-->
@@ -123,7 +125,7 @@
             </div>
             <hr class="!border-t-4"/>
             {#each $persons as person, index (person.name)}
-            <div class="flex justify-center space-x-2">
+            <div class="flex justify-end items-center space-x-2 flex-wrap">
                 <div class="flex flex-1">{person.name}</div>
                 <div class="flex">
                     {#each availableWeekDays as day}
@@ -136,11 +138,12 @@
                         <span>{convertWeekDayToStr(day)}</span>
                     </span>
                     {/each}
-                </div>
-                <div class="flex">
-                    <DatePopup persons="{$persons}" index="{index}"></DatePopup>
+                    <div class="ml-2">
+                        <DatePopup persons="{$persons}" index="{index}"></DatePopup>
+                    </div>
                 </div>
             </div>
+            <hr class="!border-dashed"/>
             {/each}
         </div>
         {#if !!resultStore}
