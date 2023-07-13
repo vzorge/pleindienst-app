@@ -2,14 +2,16 @@ import type {Person} from '$lib/Person';
 import {json} from '@sveltejs/kit';
 import {Match} from '$lib/MatchingResponse';
 import type { Times } from '$lib/Times';
+import type {Group} from '$lib/Group';
+import {getAvailableDates} from '$lib/data/dates';
 
 export async function POST({ request }) {
-    const data: {days: Date[], persons: Person[]} = await request.json();
+    const data: {group: Group, persons: Person[]} = await request.json();
     const fixedPersons = data.persons.map(p => ({...p, startFrom: p.startFrom ? new Date(p.startFrom): undefined}));
-    const fixedDays = data.days.map(d => new Date(d));
+    const fixedDays = getAvailableDates(data.group.name)
     const [matches, times] = match(fixedPersons, fixedDays);
 
-    return json({matches, times}, {status: 200});
+    return json({matches, times, group: data.group}, {status: 200});
 }
 
 function match(persons: Person[], days: Date[]): [Match[], Times[]] {

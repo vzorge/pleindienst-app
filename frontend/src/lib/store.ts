@@ -1,13 +1,10 @@
-import {writable} from 'svelte/store';
 import {MatchingResponse} from './MatchingResponse';
 import {localStorageStore} from '@skeletonlabs/skeleton';
-import {Groups} from '$lib/Groups';
 import type {Person} from '$lib/Person';
+import type {Group} from '$lib/Group';
 
-export const startDate = writable<Date>();
-export const endDate = writable<Date>();
 export const persons = localStorageStore<Person[]>('persons', []);
 
-export const group = localStorageStore<{name?: Groups, number?: number}>('group', {});
+export const group = localStorageStore<Group>('group', {} as Group);
 
 export const resultStore = localStorageStore<MatchingResponse>('result', {matches: [], times: []});

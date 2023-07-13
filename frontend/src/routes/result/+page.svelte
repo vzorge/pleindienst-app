@@ -1,48 +1,44 @@
 <script lang="ts">
     import {Table} from '@skeletonlabs/skeleton';
     import {Match, MatchingResponse} from '$lib/MatchingResponse';
-    import {group, resultStore} from '$lib/store';
+    import {resultStore} from '$lib/store';
     import {CSVDownloader} from 'svelte-csv';
-    import vacationDates from '$lib/data/vacationDates.json';
     import {convertWeekDayToStr} from '$lib/WeekDay';
-    import {Groups} from '$lib/Groups';
     import type {Times} from '$lib/Times';
-
-    const OB_END_DATE = new Date('2024-02-02');
+    import {getVacationDates} from '$lib/data/dates';
 
     let matches: Match[] = [];
     let times: Times[] = [];
+    let groupName: string;
     let csvData;
 
     resultStore.subscribe((value: MatchingResponse) => {
-        group.subscribe(g => {
-            if (value) {
-                matches = value.matches;
-                times = value.times;
-                csvData = [...value.matches.map(m => {
-                    const datum = new Date(m.date);
+        if (value) {
+            matches = value.matches;
+            times = value.times;
+            groupName = `${value.group.name}${value.group.number}`;
+
+            csvData = [...value.matches.map(m => {
+                const datum = new Date(m.date);
+                return ({
+                    'Datum': datum,
+                    'Groep': groupName,
+                    'Dag': convertWeekDayToStr(datum.getDay()),
+                    'Ouders van:': m.person.name
+                });
+            }),
+                ...getVacationDates(value.group.name)
+                    .map(vd => {
                     return ({
-                        'Datum': datum,
-                        'Groep': (`${g.name}${g.number}`) || 'onbekend',
-                        'Dag': convertWeekDayToStr(datum.getDay()),
-                        'Ouders van:': m.person.name
+                        'Datum': vd.date,
+                        'Groep': groupName,
+                        'Dag': convertWeekDayToStr(vd.date.getDay()),
+                        'Ouders van:': vd.reason
                     });
-                }),
-                    ...vacationDates
-                        .filter(vd => g.name === Groups.OB ? new Date(vd.date).getTime() <= OB_END_DATE.getTime() : true)
-                        .map(vd => {
-                        const date = new Date(vd.date);
-                        return ({
-                            'Datum': date,
-                            'Groep': (`${g.name}${g.number}`),
-                            'Dag': convertWeekDayToStr(date.getDay()),
-                            'Ouders van:': vd.reason
-                        });
-                    })
-                ].sort((l, r) => l.Datum.getTime() - r.Datum.getTime())
-                    .map(val => ({...val, "Datum": val.Datum.toLocaleDateString('nl-NL')}));
-            }
-        });
+                })
+            ].sort((l, r) => l.Datum.getTime() - r.Datum.getTime())
+             .map(val => ({...val, "Datum": val.Datum.toLocaleDateString('nl-NL')}));
+        }
     });
 
 
@@ -83,7 +79,7 @@
                 Je krijgt dan een CSV in het formaat zoals het ook aangeleverd moet worden aan school. <br/>
                 Deze CSV zou direct door excel geopend moeten kunnen worden.
             </p>
-            <div class="justify-center"><CSVDownloader data="{csvData}" bom="{true}" filename="{'pleindienst.csv'}">Download overblijf data</CSVDownloader></div>
+            <div class="justify-center"><CSVDownloader data="{csvData}" bom="{true}" filename="{'pleindienst-' + groupName}">Download overblijf data</CSVDownloader></div>
             <hr />
             <p class="opacity-70">Onderstaande tabel geeft een overzicht van hoe vaak een naam overblijf dienst heeft. <br/> Deze lijst komt niet mee in de download</p>
             <Table source="{tableTimes}"></Table>

@@ -4,7 +4,7 @@
     import DatePopup from './DatePopup.svelte';
     import type {Person} from '$lib/Person';
     import {convertWeekDayToStr, WeekDay} from '$lib/WeekDay';
-    import {Groups} from '$lib/Groups.js';
+    import {GroupName} from '$lib/GroupName.js';
     import {group, persons, resultStore} from '$lib/store';
     import {goto} from '$app/navigation';
     import availableDates from '$lib/data/availableDates.json';
@@ -12,13 +12,11 @@
     const mbBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag, WeekDay.Vrijdag];
     const obBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag];
 
-    const OB_END_DATE = new Date('2024-02-02');
-
     $persons;
     $group;
     $resultStore;
 
-    $: availableWeekDays = $group.name === Groups.OB ? obBbWeekDays : mbBbWeekDays;
+    $: availableWeekDays = $group.name === GroupName.OB ? obBbWeekDays : mbBbWeekDays;
 
     function openChildDialog() {
         new Promise<Person[]>((resolve) => {
@@ -50,9 +48,13 @@
     }
 
     async function getResults() {
+        if (!$group.name || !$group.number || $persons.length === 0) {
+            return;
+        }
+
         const body = {
             persons: $persons,
-            days: getDateRange()
+            group: $group
         }
 
         const response = await fetch('/matching', {
@@ -67,25 +69,17 @@
         }
         response.json().then(({ matches, times }) => {
             const sortedMatches = matches.sort((l, r) => new Date(l.day).getTime() - new Date(r.day).getTime());
-            resultStore.set({matches: sortedMatches, times: times});
+            resultStore.set({matches: sortedMatches, times: times, group: $group});
             goto('/result');
         }, reason => {
             //TODO error handling
         })
     }
 
-    function getDateRange(): Date[] {
-        return availableDates
-            .map(d => new Date(d))
-            .filter(date => {
-                return $group.name === Groups.OB ? date.getTime() <= OB_END_DATE.getTime() : true;
-            });
-    }
-
 </script>
 
 <div class="container mx-auto flex grow justify-center items-start mt-10">
-    <form class="space-y-5 flex flex-col">
+    <div class="space-y-5 flex flex-col">
         <p>Vul de namen en voorkeuren in van de kinderen.
         <br/>
             Een voorkeursdag is niet verplicht. Als er niks gekozen is, werkt dat hetzelfde alsof je alles gekozen hebt.
@@ -95,18 +89,11 @@
             klik hiervoor op het datum icoontje achter de dagen.
         </p>
 
-<!--        <label class="label">-->
-<!--            <span>Voor welke datums geld het?</span>-->
-<!--            <div class="input-group grid-cols-2 gap-8 px-5 py-3" >-->
-<!--                <input type="date" class="input" placeholder="Startdatum" bind:value="{$startDate}" required />-->
-<!--                <input type="date" class="input" placeholder="Einddatum" bind:value="{$endDate}" required />-->
-<!--            </div>-->
-<!--        </label>-->
         <span class="label">Welke groep wordt ingedeeld?</span>
         <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary" display="flex">
-            <RadioItem bind:group={$group.name} name="justify" value="{Groups.OB}" class="grow">OB</RadioItem>
-            <RadioItem bind:group={$group.name} name="justify" value="{Groups.MB}" class="grow">MB</RadioItem>
-            <RadioItem bind:group={$group.name} name="justify" value="{Groups.BB}" class="grow">BB</RadioItem>
+            <RadioItem bind:group={$group.name} name="justify" value="{GroupName.OB}" class="grow">OB</RadioItem>
+            <RadioItem bind:group={$group.name} name="justify" value="{GroupName.MB}" class="grow">MB</RadioItem>
+            <RadioItem bind:group={$group.name} name="justify" value="{GroupName.BB}" class="grow">BB</RadioItem>
         </RadioGroup>
         <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary" display="flex">
             <RadioItem bind:group={$group.number} name="justify" value="{1}" class="grow">1</RadioItem>
@@ -149,6 +136,8 @@
         {#if $resultStore.matches.length > 0}
             <a href="result/" class="btn variant-filled-primary">Bekijk huidig resultaat</a>
         {/if}
-        <button class="btn {$resultStore.matches.length > 0 ? 'variant-soft-surface' : 'variant-filled-primary'}" on:click={getResults}>Genereer nieuwe resultaten</button>
-	</form>
+        <button class="btn {$resultStore.matches.length > 0 ? 'variant-soft-surface' : 'variant-filled-primary'}" on:click={getResults}>
+            Genereer nieuwe resultaten
+        </button>
+	</div>
 </div>

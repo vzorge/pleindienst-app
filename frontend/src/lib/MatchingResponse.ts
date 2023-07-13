@@ -1,5 +1,6 @@
 import type {Person} from './Person';
 import type {Times} from '$lib/Times';
+import type {Group} from '$lib/Group';
 
 export class Match {
     date: Date;
@@ -16,4 +17,5 @@ export class Match {
 export class MatchingResponse {
     matches: Match[]
     times: Times[]
+    group: Group
 }
