@@ -26,14 +26,19 @@ function match(persons: Person[], days: Date[]): [Match[], Times[]] {
     return [matches, times];
 }
 
-function matchDays(allDates: Date[], persons: Person[]): Match[] {
+function matchDays(allDates: Date[], personArr: Person[]): Match[] {
     if (allDates.length === 0) {
         return [];
     }
 
-    const [dates, remainingDates] = splitArray(allDates, persons.length);
+    const [dates, remainingDates] = splitArray(allDates, personArr.length);
 
+    const persons = [...personArr];
+    // const fixedDatePersons = []
+    // personArr.forEach(p => dates.)
     shuffleArray(persons);
+
+
     let matchedDates: Match[] = [];
     for (const person of persons) {
         if (dates.length === 0 ) {

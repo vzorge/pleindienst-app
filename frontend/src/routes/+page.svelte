@@ -126,7 +126,7 @@
                     </span>
                     {/each}
                     <div class="ml-2">
-                        <DatePopup persons="{$persons}" index="{index}"></DatePopup>
+                        <DatePopup person="{person}" index="{index}"></DatePopup>
                     </div>
                 </div>
             </div>
