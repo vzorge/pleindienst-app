@@ -12,7 +12,7 @@
         // Matches the data-popup value on your popup element
         target: 'popupDatePicker' + index,
         // Defines which side of your trigger the popup will appear
-        placement: 'top',
+        placement: 'left',
         closeQuery: 'a',
     };
 
@@ -37,7 +37,7 @@
 </button>
 
 
-<div class="card p-2 w-72 shadow-xl z-40" data-popup="{'popupDatePicker'+index}" id="{index}">
+<div class="card p-2 w-72 shadow-xl z-40 bg-tertiary-100-800-token" data-popup="{'popupDatePicker'+index}" id="{index}">
     <Accordion>
         <AccordionItem>
 <!--                <svelte:fragment slot="lead">(icon)</svelte:fragment>-->
@@ -71,5 +71,5 @@
             </svelte:fragment>
         </AccordionItem>
     </Accordion>
-    <div class="arrow bg-surface-100-800-token"></div>
+    <div class="arrow bg-tertiary-100-800-token"></div>
 </div>

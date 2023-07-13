@@ -6,9 +6,9 @@
 
 <header>
 	<div class="corner">
-<!--		<a href="https://kit.svelte.dev">-->
-<!--			<img src={logo} alt="SvelteKit" />-->
-<!--		</a>-->
+		<a href="https://github.com/vzorge/pleindienst-app">
+			<img src={github} alt="GitHub" />
+		</a>
 	</div>
 
 	<nav>
@@ -29,9 +29,6 @@
 	</nav>
 
 	<div class="corner flex gap-6">
-		<a href="https://github.com/vzorge/pleindienst-app">
-			<img src={github} alt="GitHub" />
-		</a>
         <LightSwitch />
 	</div>
 </header>
