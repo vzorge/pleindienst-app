@@ -37,7 +37,7 @@
 </button>
 
 
-<div class="card p-4 w-72 shadow-xl z-40" data-popup="{'popupDatePicker'+index}" id="{index}">
+<div class="card p-2 w-72 shadow-xl z-40" data-popup="{'popupDatePicker'+index}" id="{index}">
     <Accordion>
         <AccordionItem>
 <!--                <svelte:fragment slot="lead">(icon)</svelte:fragment>-->
