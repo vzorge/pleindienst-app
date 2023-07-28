@@ -37,6 +37,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"svelte-csv": "^1.2.8"
+		"@types/papaparse": "^5.3.7",
+		"papaparse": "^5.4.1"
 	}
 }
