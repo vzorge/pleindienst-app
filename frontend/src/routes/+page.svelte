@@ -8,6 +8,7 @@
     import {group, persons, resultStore} from '$lib/store';
     import {goto} from '$app/navigation';
     import availableDates from '$lib/data/availableDates.json';
+    import type {Group} from '$lib/Group';
 
     const mbBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag, WeekDay.Vrijdag];
     const obBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag];
@@ -76,10 +77,26 @@
         })
     }
 
+    function deleteLocalStorage() {
+        // const modal: ModalSettings = {
+        //     type: 'confirm',
+        //     // Data
+        //     title: 'Please Confirm',
+        //     body: 'Are you sure you wish to proceed?',
+        //     // TRUE if confirm pressed, FALSE if cancel pressed
+        //     response: (r: boolean) => console.log('response:', r),
+        // };
+        // modalStore.trigger(modal);
+        persons.set([]);
+        group.set({} as Group);
+        resultStore.set(undefined);
+    }
+
 </script>
 
 <div class="container mx-auto flex grow justify-center items-start mt-10">
     <div class="space-y-5 flex flex-col">
+        <div class="self-end"><button class="btn btn-sm variant-glass-error" on:click={() => deleteLocalStorage()}>Schoon beginnen</button></div>
         <p>Vul de namen en voorkeuren in van de kinderen.
         <br/>
             Een voorkeursdag is niet verplicht. Als er niks gekozen is, werkt dat hetzelfde alsof je alles gekozen hebt.
@@ -133,10 +150,10 @@
             <hr class="!border-dashed"/>
             {/each}
         </div>
-        {#if $resultStore.matches.length > 0}
+        {#if $resultStore}
             <a href="result/" class="btn variant-filled-primary">Bekijk huidig resultaat</a>
         {/if}
-        <button class="btn {$resultStore.matches.length > 0 ? 'variant-soft-surface' : 'variant-filled-primary'}" on:click={getResults}>
+        <button class="btn {$resultStore ? 'variant-soft-surface' : 'variant-filled-primary'}" on:click={getResults}>
             Genereer nieuwe resultaten
         </button>
 	</div>
