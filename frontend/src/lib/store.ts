@@ -7,4 +7,4 @@ export const persons = localStorageStore<Person[]>('persons', []);
 
 export const group = localStorageStore<Group>('group', {} as Group);
 
-export const resultStore = localStorageStore<MatchingResponse>('result', {matches: [], times: []});
+export const resultStore = localStorageStore<MatchingResponse | undefined>('result', undefined);
