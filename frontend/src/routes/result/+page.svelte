@@ -104,7 +104,12 @@
                     <div>
                         <span class="flex-auto">
                             <dt class="font-bold">{convertWeekDayToStr(new Date(match.date).getDay())} {new Date(match.date).toLocaleDateString("nl-NL")}</dt>
-                            <dd class="text-sm">{match.person.name}</dd>
+                            <dd class="text-sm">
+                                <div class="flex">
+                                    <span class="badge-icon {match.happy ? 'variant-filled-success' : 'variant-filled-error'}">{match.happy ? '+' : '-'}</span>
+                                    <span>{match.person.name}</span>
+                                </div>
+                            </dd>
                         </span>
                     </div>
                     {/each}
