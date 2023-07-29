@@ -4,12 +4,11 @@
     import {convertStrToWeekDay, convertWeekDayToStr} from '$lib/WeekDay';
 
     export let parent: any;
-
-    const person: Person[] = $modalStore[0].component.props.persons;
+    export let persons: Person[] = [];
 
     const concatSymbol = `:`;
     const daySeparator = ' ';
-    let textPerson = person.map(p => `${p.name}${concatSymbol}${p.preference.map(pref => convertWeekDayToStr(pref)).join(daySeparator)}`).join('\n');
+    let textPerson = persons.map(p => `${p.name}${concatSymbol}${p.preference.map(pref => convertWeekDayToStr(pref)).join(daySeparator)}`).join('\n');
     function onFormSubmit(): void {
         function convertToPerson(input: string): Person {
             const [first, second] = input.split(concatSymbol);
@@ -34,7 +33,7 @@
 
     <form class="modal-form p-4 space-y-4 rounded-container-token">
         <span>Vul één naam in per regel.</span>
-        <textarea class="textarea" bind:value="{textPerson}" rows="{person.length + 5}"></textarea>
+        <textarea class="textarea" bind:value="{textPerson}" rows="{persons.length + 5}"></textarea>
     </form>
 
     <footer class="modal-footer {parent.regionFooter}">
