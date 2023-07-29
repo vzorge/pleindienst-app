@@ -14,30 +14,40 @@ export async function POST({ request }) {
     return json({matches, times, group: data.group}, {status: 200});
 }
 
-function match(persons: Person[], days: Date[]): [Match[], Times[]] {
-    const matches = matchDays(days, persons).sort((l, r) => l.date.getTime() - r.date.getTime());
+function match(personArr: Person[], days: Date[]): [Match[], Times[]] {
+    const later = personArr.filter(p => p.startFrom && p.startFrom > days[0])
+    const persons = personArr.filter(p => !p.startFrom)
+    const matches = matchDays(days, {later, persons}).sort((l, r) => l.date.getTime() - r.date.getTime());
 
     const map = matches.map(m => m.person).reduce((acc: Map<Person, number>, val: Person) => {
         acc.set(val, (acc.get(val) || 0) + 1);
         return acc;
     }, new Map<Person, number>());
-    const times: Times[] = Array.from(map, ([person, amount]) => ({person, amount}));
+    const times: Times[] = Array.from(map, ([person, amount]) => ({person, amount}))
+        .sort((l, r) => r.amount - l.amount);
 
     return [matches, times];
 }
 
-function matchDays(allDates: Date[], personArr: Person[]): Match[] {
+function matchDays(allDates: Date[], {later, persons}: {later: Person[], persons: Person[]}) {
     if (allDates.length === 0) {
         return [];
     }
 
-    const [dates, remainingDates] = splitArray(allDates, personArr.length);
+    persons = [...persons];
 
-    const persons = [...personArr];
-    // const fixedDatePersons = []
-    // personArr.forEach(p => dates.)
-    shuffleArray(persons);
+    if (later.length > 0) {
+        const lastDay: Date = allDates[Math.min(allDates.length - 1, persons.length)];
+        for (let i = later.length - 1; i >= 0; i--) {
+            const laterPerson = later[i];
+            if (laterPerson.startFrom <= lastDay) {
+                persons.push(laterPerson);
+                later.splice(i, 1);
+            }
+        }
+    }
 
+    const [dates, remainingDates] = splitArray(allDates, persons.length);
 
     let matchedDates: Match[] = [];
     for (const person of persons) {
@@ -63,11 +73,16 @@ function matchDays(allDates: Date[], personArr: Person[]): Match[] {
     matchedDates = tradeDays(matchedDates);
 
     if (dates.length > 0) {
-        console.log('There were dates left, someone must not be allowed to start yet')
+        console.log('There were dates left, someone must not be allowed to start yet and someone else took their place at the end of the queue');
+    }
+
+    const allHappy = matchedDates.every(m => m.happy);
+    if (!allHappy) {
+        shuffleArray(persons);
     }
 
     if (remainingDates.length > 0 || dates.length > 0) {
-        return [...matchedDates, ...matchDays([...dates, ...remainingDates], persons)];
+        return [...matchedDates, ...matchDays([...dates, ...remainingDates], {later, persons})];
     }
     return matchedDates;
 }
@@ -81,7 +96,16 @@ function findPreferredDate(person: Person, dates: Date[]) {
     return undefined;
 }
 
+
 function tradeDays(matched: Match[]): Match[] {
+    function canTrade(person1: Person, date1: Date, person2: Person, date2: Date, happyOnOtherDay: boolean, p2Happy: boolean) {
+        return hasPreference(person1, date1)
+            && person1.name !== person2.name
+            && isAllowedOnDay(person1, date1)
+            && isAllowedOnDay(person2, date2)
+            && (happyOnOtherDay || !p2Happy);
+    }
+
     const fixedMatched = [...matched];
     for (let i = 0; i < fixedMatched.length; i++) {
         const {date, person, happy}: Match = fixedMatched[i];
@@ -89,11 +113,7 @@ function tradeDays(matched: Match[]): Match[] {
             for (let j = 0; j < fixedMatched.length; j++) {
                 const {date: day2, person: person2, happy: p2Happy} = fixedMatched[j];
                 const happyOnOtherDay = hasPreference(person2, date);
-                if (hasPreference(person, day2)
-                        && person.name !== person2.name
-                        && isAllowedOnDay(person, day2)
-                        && isAllowedOnDay(person2, date)
-                        && (happyOnOtherDay || !p2Happy)) {
+                if (canTrade(person, day2, person2, date, happyOnOtherDay, p2Happy)) {
                     fixedMatched[i] = {date, person: person2, happy: happyOnOtherDay};
                     fixedMatched[j] = {date: day2, person, happy: true};
                     if (!happyOnOtherDay) {
