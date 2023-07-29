@@ -8,12 +8,17 @@
 
     const concatSymbol = `:`;
     const daySeparator = ' ';
-    let textPerson = persons.map(p => `${p.name}${concatSymbol}${p.preference.map(pref => convertWeekDayToStr(pref)).join(daySeparator)}`).join('\n');
+
+    function convertPreferences(p: Person) {
+        return p.preference.map(pref => convertWeekDayToStr(pref)).join(daySeparator);
+    }
+
+    let textPerson = persons.map(p => `${p.name}${concatSymbol}${(convertPreferences(p))}${concatSymbol}${p.startFrom ? p.startFrom : ''}`).join('\n');
     function onFormSubmit(): void {
         function convertToPerson(input: string): Person {
-            const [first, second] = input.split(concatSymbol);
+            const [first, second, third] = input.split(concatSymbol);
             const prefs = second ? second.split(daySeparator).map(d => convertStrToWeekDay(d)) : [];
-            return {name: first, preference: prefs};
+            return {name: first, preference: prefs, startFrom: third};
         }
 
         if ($modalStore[0].response) {
