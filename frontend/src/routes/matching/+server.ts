@@ -4,19 +4,20 @@ import {Match} from '$lib/MatchingResponse';
 import type { Times } from '$lib/Times';
 import type {Group} from '$lib/Group';
 import {getAvailableDates} from '$lib/data/dates';
+import {toDate} from '$lib/Person';
 
 export async function POST({ request }) {
     const data: {group: Group, persons: Person[]} = await request.json();
-    const fixedPersons = data.persons.map(p => ({...p, startFrom: p.startFrom ? new Date(p.startFrom): undefined}));
     const fixedDays = getAvailableDates(data.group.name)
-    const [matches, times] = match(fixedPersons, fixedDays);
+    const [matches, times] = match(data.persons, fixedDays);
 
     return json({matches, times, group: data.group}, {status: 200});
 }
 
 function match(personArr: Person[], days: Date[]): [Match[], Times[]] {
-    const later = personArr.filter(p => p.startFrom && p.startFrom > days[0])
+    const later = personArr.filter(p => p.startFrom && toDate(p.startFrom) > days[0])
     const persons = personArr.filter(p => !p.startFrom)
+
     const matches = matchDays(days, {later, persons}).sort((l, r) => l.date.getTime() - r.date.getTime());
 
     const map = matches.map(m => m.person).reduce((acc: Map<Person, number>, val: Person) => {
@@ -40,7 +41,7 @@ function matchDays(allDates: Date[], {later, persons}: {later: Person[], persons
         const lastDay: Date = allDates[Math.min(allDates.length - 1, persons.length)];
         for (let i = later.length - 1; i >= 0; i--) {
             const laterPerson = later[i];
-            if (laterPerson.startFrom <= lastDay) {
+            if (toDate(laterPerson.startFrom) <= lastDay) {
                 persons.push(laterPerson);
                 later.splice(i, 1);
             }
@@ -132,7 +133,7 @@ function hasPreference(person: Person, day: Date): boolean {
 }
 
 function isAllowedOnDay(person: Person, day: Date) {
-    return !person.startFrom || day >= person.startFrom;
+    return !person.startFrom || day >= toDate(person.startFrom);
 }
 
 function splitArray(allDates: Date[], desiredLength: number): [Date[], Date[]] {

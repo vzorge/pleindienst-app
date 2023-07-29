@@ -3,8 +3,13 @@ import {WeekDay} from '$lib/WeekDay';
 export type Person = {
     name: Name
     preference: WeekDay[]
-    startFrom?: Date | string
-    fixedDates?: Date[]
+    startFrom?: DateLike
+    fixedDates?: DateLike[]
 }
 
 export type Name = string;
+export type DateLike = string;
+
+export function toDate(dateLike: DateLike | undefined) {
+    return dateLike ? new Date(dateLike) : undefined;
+}
