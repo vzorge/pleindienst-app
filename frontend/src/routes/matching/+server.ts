@@ -1,10 +1,10 @@
-import type {Person} from '$lib/Person';
+import type {DateLike, Person} from '$lib/Person';
+import {toDate} from '$lib/Person';
 import {json} from '@sveltejs/kit';
 import {Match} from '$lib/MatchingResponse';
-import type { Times } from '$lib/Times';
+import type {Times} from '$lib/Times';
 import type {Group} from '$lib/Group';
 import {getAvailableDates} from '$lib/data/dates';
-import {toDate} from '$lib/Person';
 
 export async function POST({ request }) {
     const data: {group: Group, persons: Person[]} = await request.json();
@@ -15,8 +15,7 @@ export async function POST({ request }) {
 }
 
 function match(personArr: Person[], days: Date[]): [Match[], Times[]] {
-    const later = personArr.filter(p => p.startFrom && toDate(p.startFrom) > days[0])
-    const persons = personArr.filter(p => !p.startFrom)
+    const [later, persons] = splitArrayOn(personArr, p => !!p.startFrom && toDate(p.startFrom) > days[0]);
 
     const matches = matchDays(days, {later, persons}).sort((l, r) => l.date.getTime() - r.date.getTime());
 
@@ -29,6 +28,7 @@ function match(personArr: Person[], days: Date[]): [Match[], Times[]] {
 
     return [matches, times];
 }
+
 
 function matchDays(allDates: Date[], {later, persons}: {later: Person[], persons: Person[]}) {
     if (allDates.length === 0) {
@@ -51,10 +51,24 @@ function matchDays(allDates: Date[], {later, persons}: {later: Person[], persons
     const [dates, remainingDates] = splitArray(allDates, persons.length);
 
     let matchedDates: Match[] = [];
-    for (const person of persons) {
+
+    const [fixedDatePersons, nonFixedPersons] = splitArrayOn(persons, p => hasFixedDates(p, dates))
+
+    for (const person of fixedDatePersons) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const matches = intersect(person.fixedDates!, dates);
+        matches.forEach(match => {
+            matchedDates.push({date: match, person, happy: true});
+            dates.splice(dates.indexOf(match), 1);
+
+        })
+    }
+
+    for (const person of nonFixedPersons) {
         if (dates.length === 0 ) {
             break;
         }
+
         if (person.preference.length === 0 && isAllowedOnDay(person, dates[0])) {
             const date = dates.shift();
             if (date) matchedDates.push({date, person, happy: true});
@@ -100,10 +114,11 @@ function findPreferredDate(person: Person, dates: Date[]) {
 
 function tradeDays(matched: Match[]): Match[] {
     function canTrade(person1: Person, date1: Date, person2: Person, date2: Date, happyOnOtherDay: boolean, p2Happy: boolean) {
-        return hasPreference(person1, date1)
+        return hasPreference(person1, date2)
             && person1.name !== person2.name
-            && isAllowedOnDay(person1, date1)
-            && isAllowedOnDay(person2, date2)
+            && isAllowedOnDay(person1, date2)
+            && isAllowedOnDay(person2, date1)
+            && !hasFixedDates(person2, [date2])
             && (happyOnOtherDay || !p2Happy);
     }
 
@@ -114,7 +129,7 @@ function tradeDays(matched: Match[]): Match[] {
             for (let j = 0; j < fixedMatched.length; j++) {
                 const {date: day2, person: person2, happy: p2Happy} = fixedMatched[j];
                 const happyOnOtherDay = hasPreference(person2, date);
-                if (canTrade(person, day2, person2, date, happyOnOtherDay, p2Happy)) {
+                if (canTrade(person, date, person2, day2, happyOnOtherDay, p2Happy)) {
                     fixedMatched[i] = {date, person: person2, happy: happyOnOtherDay};
                     fixedMatched[j] = {date: day2, person, happy: true};
                     if (!happyOnOtherDay) {
@@ -136,6 +151,18 @@ function isAllowedOnDay(person: Person, day: Date) {
     return !person.startFrom || day >= toDate(person.startFrom);
 }
 
+function intersect(fixedDates: DateLike[], dates: Date[]): Date[] {
+    const matches = [];
+    for (const fixedDate of fixedDates) {
+        const match = dates.find(d => d.getTime() === new Date(fixedDate).getTime());
+        if (match) {
+            console.log('match found');
+            matches.push(match);
+        }
+    }
+    return matches;
+}
+
 function splitArray(allDates: Date[], desiredLength: number): [Date[], Date[]] {
     const length = Math.min(allDates.length, desiredLength);
     const split = allDates.splice(0, length);
@@ -148,4 +175,19 @@ function shuffleArray(array) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
+}
+
+function splitArrayOn<T>(arr: T[], func: (val: T) => boolean): [T[], T[]] {
+    const truth = [];
+    const falsy = [];
+
+    arr.forEach(t => {
+        (func(t) ? truth : falsy).push(t);
+    });
+
+    return [truth, falsy];
+}
+
+function hasFixedDates(p: Person, dates: Date[]) {
+    return !!p.fixedDates && intersect(p.fixedDates, dates).length > 0;
 }

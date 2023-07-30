@@ -1,10 +1,11 @@
 <script lang="ts">
-    import type {Person} from '$lib/Person';
+    import type {DateLike, Person} from '$lib/Person';
     import {Accordion, AccordionItem, popup} from '@skeletonlabs/skeleton';
     import datepicker from '$lib/images/date-range.svg';
 
     export let person: Person;
     export let index: number;
+    export let state: (e: 'open' | 'close') => boolean;
 
     const popupDatePicker = {
         // Represents the type of event that opens/closed the popup
@@ -14,14 +15,15 @@
         // Defines which side of your trigger the popup will appear
         placement: 'left',
         closeQuery: 'a',
+        state: e => e.state ? state('open') : state('close')
     };
 
-    let extraDate: Date;
+    let extraDate: DateLike;
 
     function addFixedDate() {
         if (extraDate && !(person.fixedDates || []).includes(extraDate)) {
             if (!person.fixedDates) person.fixedDates = [];
-            person.fixedDates.push(new Date(extraDate));
+            person.fixedDates.push(extraDate);
             person = person;
         }
     }
@@ -53,8 +55,9 @@
             <svelte:fragment slot="content">
                 <div class="flex flex-col space-y-1">
                     <span class="text-surface-900-50-token text-xs">Als je vaste datums wil geven, vul deze dan hier in en voeg ze toe via het plusje.
-                        Verwijderen is mogelijk door op de datum te klikken.</span>
-                    <span class="font-bold text-xs">Deze functie werkt op het moment nog niet</span>
+                        Verwijderen door op de datum te klikken.</span>
+                    <span class="text-surface-900-50-token text-xs"><span class="font-bold">Let op:</span>
+                        Het is mogelijk dat de persoon naast de opgegeven data ook nog op andere dagen ingepland wordt.</span>
                     <div class="flex space-x-1">
                         <input type="date" class="input" placeholder="Caste datum toevoegen" bind:value="{extraDate}" />
                         <button class="btn-icon variant-glass" on:click={addFixedDate}><span class="text-2xl font-bold text-primary-900-50-token">+</span></button>
@@ -62,7 +65,7 @@
                     <div class="flex flex-wrap space-evenly">
                         {#each (person.fixedDates || []) as fixedDate, i (fixedDate)}
                             <span class="chip variant-soft hover:variant-filled m-1" on:click={() => removeFixedDate(i)} on:keydown={() => removeFixedDate(index)}>
-                                <span class="text-sm">{fixedDate.toLocaleDateString('nl-NL')}</span>
+                                <span class="text-sm">{fixedDate}</span>
                                 <span class="text-lg font-bold text-error-900-50-token">-</span>
                             </span>
                         {/each}

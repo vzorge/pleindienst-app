@@ -143,7 +143,7 @@
                     </span>
                     {/each}
                     <div class="ml-2">
-                        <DatePopup person="{person}" index="{index}"></DatePopup>
+                        <DatePopup person="{person}" index="{index}" state="{state => state === 'close' ? $persons = $persons : undefined}"></DatePopup>
                     </div>
                 </div>
             </div>
