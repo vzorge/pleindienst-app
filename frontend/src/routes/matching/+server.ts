@@ -16,6 +16,7 @@ export async function POST({ request }) {
 
 function match(personArr: Person[], days: Date[]): [Match[], Times[]] {
     const [later, persons] = splitArrayOn(personArr, p => !!p.startFrom && toDate(p.startFrom) > days[0]);
+    shuffleArray(persons);
 
     const matches = matchDays(days, {later, persons}).sort((l, r) => l.date.getTime() - r.date.getTime());
 
