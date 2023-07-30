@@ -8,7 +8,7 @@ import {getAvailableDates} from '$lib/data/dates';
 
 export async function POST({ request }) {
     const data: {group: Group, persons: Person[]} = await request.json();
-    const fixedDays = getAvailableDates(data.group.name)
+    const fixedDays = getAvailableDates(data.group.name);
     const [matches, times] = match(data.persons, fixedDays);
 
     return json({matches, times, group: data.group}, {status: 200});
