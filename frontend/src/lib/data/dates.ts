@@ -13,11 +13,10 @@ export function getAvailableDates(groupName: GroupName) {
         });
 }
 
-export function getVacationDates(groupName: GroupName) {
+export function getVacationDates(groupName: GroupName): {date: Date, reason: string}[] {
     function regularFridays() {
-        return availableDates.map(d => new Date(d)).filter(date => date.getDay() === WeekDay.Vrijdag);
+        return availableDates.map(d => ({date: new Date(d), reason: ''})).filter(vac => vac.date.getDay() === WeekDay.Vrijdag);
     }
-
     const extraDates = groupName === GroupName.OB ? [...regularFridays(), ...vacationDates] : vacationDates;
 
     return extraDates
