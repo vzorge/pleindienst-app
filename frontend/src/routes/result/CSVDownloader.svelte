@@ -1,11 +1,12 @@
 <script lang="ts">
-    import { UnparseConfig, unparse } from 'papaparse';
-    export let data;
+    import { unparse } from 'papaparse';
+    import type { UnparseConfig } from 'papaparse';
+    export let data: any;
     export let filename = 'filename';
     export let bom = 2;
     export let options: UnparseConfig | undefined = undefined;
 
-    function download(data, filename, bom) {
+    function download(data: any, filename: string, bom: number) {
         const bomCode = bom ? '\ufeff' : '';
         let csvContent = null;
         if (typeof data === 'object') {

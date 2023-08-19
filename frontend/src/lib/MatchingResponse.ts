@@ -14,7 +14,7 @@ export class Match {
     }
 }
 
-export class MatchingResponse {
+export type MatchingResponse = {
     matches: Match[]
     times: Times[]
     group: Group

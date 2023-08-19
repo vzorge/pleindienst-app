@@ -18,6 +18,7 @@
 		"@sveltejs/kit": "^1.5.0",
 		"@tailwindcss/forms": "^0.5.3",
 		"@tailwindcss/typography": "^0.5.9",
+		"@types/papaparse": "^5.3.7",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"autoprefixer": "^10.4.14",
@@ -32,12 +33,12 @@
 		"svelte-check": "^3.0.1",
 		"tailwindcss": "^3.3.2",
 		"tslib": "^2.4.1",
-		"typescript": "^5.0.0",
+		"typescripzt": "^5.1.6",
 		"vite": "^4.3.0"
 	},
 	"type": "module",
 	"dependencies": {
-		"@types/papaparse": "^5.3.7",
+		"ics": "^3.2.0",
 		"papaparse": "^5.4.1"
 	}
 }
