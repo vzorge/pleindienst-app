@@ -1,13 +1,13 @@
 <script lang="ts">
     import type {DateLike, Person} from '$lib/Person';
-    import {Accordion, AccordionItem, popup} from '@skeletonlabs/skeleton';
+    import {Accordion, AccordionItem, popup, type PopupSettings} from '@skeletonlabs/skeleton';
     import datepicker from '$lib/images/date-range.svg';
 
     export let person: Person;
     export let index: number;
     export let state: (e: 'open' | 'close') => boolean;
 
-    const popupDatePicker = {
+    const popupDatePicker: PopupSettings = {
         // Represents the type of event that opens/closed the popup
         event: 'click',
         // Matches the data-popup value on your popup element
@@ -28,7 +28,7 @@
         }
     }
 
-    function removeFixedDate(index) {
+    function removeFixedDate(index: number) {
         person.fixedDates!.splice(index, 1);
         person = person;
     }
@@ -39,7 +39,7 @@
 </button>
 
 
-<div class="card p-2 w-72 shadow-xl z-40 bg-tertiary-100-800-token" data-popup="{'popupDatePicker'+index}" id="{index}">
+<div class="card p-2 w-72 shadow-xl z-40 bg-tertiary-100-800-token" data-popup="{'popupDatePicker'+index}" id="popup-'{index}'">
     <Accordion>
         <AccordionItem>
 <!--                <svelte:fragment slot="lead">(icon)</svelte:fragment>-->
@@ -57,9 +57,9 @@
                     <span class="text-surface-900-50-token text-xs">Als je vaste datums wil geven, vul deze dan hier in en voeg ze toe via het plusje.
                         Verwijderen door op de datum te klikken.</span>
                     <span class="text-surface-900-50-token text-xs"><span class="font-bold">Let op:</span>
-                        Het is mogelijk dat de persoon naast de opgegeven data ook nog op andere dagen ingepland wordt.</span>
+                        De overblijf wordt voor dit kind alleen op deze dagen ingepland. Kies dus genoeg dagen.</span>
                     <div class="flex space-x-1">
-                        <input type="date" class="input" placeholder="Caste datum toevoegen" bind:value="{extraDate}" />
+                        <input type="date" class="input" placeholder="Vaste datum toevoegen" bind:value="{extraDate}" />
                         <button class="btn-icon variant-glass" on:click={addFixedDate}><span class="text-2xl font-bold text-primary-900-50-token">+</span></button>
                     </div>
                     <div class="flex flex-wrap space-evenly">

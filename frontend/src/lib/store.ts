@@ -1,4 +1,4 @@
-import {MatchingResponse} from './MatchingResponse';
+import type {MatchingResponse} from './MatchingResponse';
 import {localStorageStore} from '@skeletonlabs/skeleton';
 import type {Person} from '$lib/Person';
 import type {Group} from '$lib/Group';

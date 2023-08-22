@@ -1,6 +1,6 @@
 <script lang="ts">
     import {Table} from '@skeletonlabs/skeleton';
-    import {Match, MatchingResponse} from '$lib/MatchingResponse';
+    import type {Match, MatchingResponse} from '$lib/MatchingResponse';
     import {resultStore} from '$lib/store';
     import CSVDownloader from './CSVDownloader.svelte';
     import {convertWeekDayToStr} from '$lib/WeekDay';
@@ -15,10 +15,10 @@
     let matches: Match[] = [];
     let times: Times[] = [];
     let groupName: string;
-    let csvData;
+    let csvData: {};
 
     if (browser) {
-        resultStore.subscribe((value: MatchingResponse) => {
+        resultStore.subscribe((value: MatchingResponse | undefined) => {
             if (value) {
                 matches = value.matches;
                 times = value.times;
@@ -68,10 +68,10 @@
         return result;
     }
 
-    function tableTimesMapper() {
-        const result = [];
+    function tableTimesMapper(): string[][] {
+        const result: string[][] = [];
         for (const time of times) {
-            result.push([time.person.name, time.amount]);
+            result.push([time.person.name, String(time.amount)]);
         }
         return result;
     }

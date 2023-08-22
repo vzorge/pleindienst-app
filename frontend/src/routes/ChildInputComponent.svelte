@@ -13,12 +13,15 @@
         return p.preference.map(pref => convertWeekDayToStr(pref)).join(daySeparator);
     }
 
-    let textPerson = persons.map(p => `${p.name}${concatSymbol}${(convertPreferences(p))}${concatSymbol}${p.startFrom ? p.startFrom : ''}`).join('\n');
+    let textPerson = persons
+        .map(p => `${p.name}${concatSymbol}${(convertPreferences(p))}${concatSymbol}` +
+                    `${p.startFrom ? p.startFrom : ''}${concatSymbol}${p.timesPast}`)
+        .join('\n');
     function onFormSubmit(): void {
         function convertToPerson(input: string): Person {
-            const [first, second, third] = input.split(concatSymbol);
+            const [first, second, third, fourth] = input.split(concatSymbol);
             const prefs = second ? second.split(daySeparator).map(d => convertStrToWeekDay(d)) : [];
-            return {name: first, preference: prefs, startFrom: third};
+            return {name: first, preference: prefs, startFrom: third, timesPast: parseInt(fourth) || 0};
         }
 
         if ($modalStore[0].response) {

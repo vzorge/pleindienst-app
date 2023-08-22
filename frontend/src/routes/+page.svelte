@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {modalStore, RadioGroup, RadioItem} from '@skeletonlabs/skeleton';
+    import {modalStore, RadioGroup, RadioItem, type ModalSettings} from '@skeletonlabs/skeleton';
     import ChildInputComponent from './ChildInputComponent.svelte';
     import DatePopup from './DatePopup.svelte';
     import type {Person} from '$lib/Person';
@@ -7,8 +7,8 @@
     import {GroupName} from '$lib/GroupName.js';
     import {group, persons, resultStore} from '$lib/store';
     import {goto} from '$app/navigation';
-    import availableDates from '$lib/data/availableDates.json';
     import type {Group} from '$lib/Group';
+	import type { Match } from '$lib/MatchingResponse';
 
     const mbBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag, WeekDay.Vrijdag];
     const obBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag];
@@ -66,30 +66,38 @@
             }
         });
         if (!response.ok) {
+            console.log(response);
             // TODO foutafhandeling
         }
         response.json().then(({ matches, times }) => {
-            const sortedMatches = matches.sort((l, r) => new Date(l.day).getTime() - new Date(r.day).getTime());
+            const sortedMatches = matches.sort((l: Match, r: Match) => new Date(l.date).getTime() - new Date(r.date).getTime());
             resultStore.set({matches: sortedMatches, times: times, group: $group});
             goto('/result');
         }, reason => {
+            console.log(reason);
             //TODO error handling
         })
     }
 
     function deleteLocalStorage() {
-        // const modal: ModalSettings = {
-        //     type: 'confirm',
-        //     // Data
-        //     title: 'Please Confirm',
-        //     body: 'Are you sure you wish to proceed?',
-        //     // TRUE if confirm pressed, FALSE if cancel pressed
-        //     response: (r: boolean) => console.log('response:', r),
-        // };
-        // modalStore.trigger(modal);
-        persons.set([]);
-        group.set({} as Group);
-        resultStore.set(undefined);
+        new Promise<boolean>(resolve => {
+            const modal: ModalSettings = {
+                type: 'confirm',
+                // Data
+                title: 'Alle data weggooien',
+                body: 'Weet je zeker dat je alle ingevulde gegevens wil weggooien?',
+                buttonTextCancel: 'Terug',
+                buttonTextConfirm: 'Wissen',
+                response: (r: boolean) => resolve(r),
+            };
+            modalStore.trigger(modal);
+        }).then((r: boolean) => {
+            if (r) {
+                persons.set([]);
+                group.set({} as Group);
+                resultStore.set(undefined);
+            }
+        })
     }
 
 </script>
@@ -123,27 +131,32 @@
         <button class="btn btn-sm variant-ghost-secondary self-end" on:click={openChildDialog}>Kinderen beheren</button>
 
         <div class="space-y-2">
-            <div class="flex justify-between">
-                <span class="font-bold flex">Naam</span>
-                <span class="font-bold flex">Voorkeuren</span>
+            <div class="flex justify-end space-x-5">
+                <span class="font-bold flex flex-1">Naam</span>
+                <span class="font-bold">Voorkeuren</span>
+                <span class="font-bold">Eerder</span>
+                <span class="font-bold pr-6">&nbsp;</span>
             </div>
             <hr class="!border-t-4"/>
             {#each $persons as person, index (person.name)}
             <div class="flex justify-end items-center space-x-2 flex-wrap">
                 <div class="flex flex-1">{person.name}</div>
-                <div class="flex">
-                    {#each availableWeekDays as day}
-                    <span
-                            class="chip {person.preference.includes(day) ? 'variant-filled' : 'variant-soft'}"
-                            on:click={() => { toggleDay(person, day) }}
-                            on:keypress
-                    >
-                        <!--{#if person.preference.includes(day)}<span>(icon)</span>{/if}-->
-                        <span>{convertWeekDayToStr(day)}</span>
-                    </span>
-                    {/each}
-                    <div class="ml-2">
-                        <DatePopup person="{person}" index="{index}" state="{state => state === 'close' ? $persons = $persons : undefined}"></DatePopup>
+                <div class="flex space-x-2">
+                    <div class="flex">
+                        {#each availableWeekDays as day}
+                        <span
+                                class="chip {person.preference.includes(day) ? 'variant-filled' : 'variant-soft'}"
+                                on:click={() => { toggleDay(person, day) }}
+                                on:keypress
+                        >
+                            <!--{#if person.preference.includes(day)}<span>(icon)</span>{/if}-->
+                            <span>{convertWeekDayToStr(day)}</span>
+                        </span>
+                        {/each}
+                    </div>
+                    <input type="number" bind:value={person.timesPast} class="input w-10" min="0" max="99"/>
+                    <div>
+                        <DatePopup person="{person}" index="{index}" state="{state => !!(state === 'close' ? $persons = $persons : undefined)}"></DatePopup>
                     </div>
                 </div>
             </div>
@@ -158,3 +171,17 @@
         </button>
 	</div>
 </div>
+
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+</style>

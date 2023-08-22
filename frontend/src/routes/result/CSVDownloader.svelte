@@ -3,7 +3,7 @@
     import type { UnparseConfig } from 'papaparse';
     export let data: any;
     export let filename = 'filename';
-    export let bom = 2;
+    export let bom = false;
     export let options: UnparseConfig | undefined = undefined;
 
     function download(data: any, filename: string, bom: number) {
