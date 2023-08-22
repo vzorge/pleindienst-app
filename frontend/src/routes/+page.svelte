@@ -105,12 +105,11 @@
 <div class="container mx-auto flex grow justify-center items-start mt-10">
     <div class="space-y-5 flex flex-col">
         <div class="self-end"><button class="btn btn-sm variant-glass-error" on:click={() => deleteLocalStorage()}>Schoon beginnen</button></div>
-        <p>Vul de namen en voorkeuren in van de kinderen.
+        <p>Vul de namen en voorkeuren in van de kinderen. Je kan ook aangeven hoe vaak iemand al dienst gehad heeft dit jaar.
         <br/>
             Een voorkeursdag is niet verplicht. Als er niks gekozen is, werkt dat hetzelfde alsof je alles gekozen hebt.
         <br/>
-            Het is ook mogelijk om op te geven vanaf wanneer iemand meegeteld moet worden,
-        <br/>
+            Het is ook mogelijk om op te geven vanaf wanneer iemand meegeteld moet worden of dat iemand enkel vaste datums krijgt.
             klik hiervoor op het datum icoontje achter de dagen.
         </p>
 
