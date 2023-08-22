@@ -37,7 +37,7 @@ function planEvenly(personArr: Person[], days: Date[]): Match[] {
 
         pers.times++;
         pers.nextDate = new Date(date);
-        pers.nextDate.setDate(pers.nextDate.getDate() + 21); // TODO update to a better value
+        pers.nextDate.setDate(pers.nextDate.getDate() + 20); // TODO update to a better value
 
         matches.push({date, person: pers, happy: hasPreference(pers, date)});
 
