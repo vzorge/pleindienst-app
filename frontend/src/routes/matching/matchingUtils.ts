@@ -11,11 +11,13 @@ export function tradeDays(matched: Match[]): Match[] {
           && (happyOnOtherDay || !p2Happy);
   }
 
+  const tradeRange = 8;
+
   const fixedMatched = [...matched];
   for (let i = 0; i < fixedMatched.length; i++) {
       const {date, person, happy}: Match = fixedMatched[i];
       if (!happy) {
-          for (let j = 0; j < fixedMatched.length; j++) {
+          for (let j = Math.max(0, i - tradeRange); j < Math.min(fixedMatched.length, i + tradeRange); j++) {
               const {date: day2, person: person2, happy: p2Happy} = fixedMatched[j];
               const happyOnOtherDay = hasPreference(person2, date);
               if (canTrade(person, date, person2, day2, happyOnOtherDay, p2Happy)) {
