@@ -68,10 +68,11 @@ function findFraction(startFrom: DateLike | undefined, dates: Date[]): number {
     const fromDate = new Date(startFrom);
 
     if (fromDate > dates[dates.length - 1]) return 0;
+    if (fromDate <= dates[0]) return 1;
 
     const idx = dates.findIndex((val, idx, arr) => val === fromDate || (val < fromDate && arr[idx] > fromDate));
 
-    return dates.length / idx;
+    return dates.length / (idx + 1);
 }
 
 function planFixedDates(persons: Person[], days: Date[]): [Date[], Match[]] {
