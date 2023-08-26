@@ -50,7 +50,7 @@
 
 
     const tableTimes = {
-        head: ['Naam', 'Aantal'],
+        head: ['Naam', 'Aantal nu', 'Aantal totaal'],
         body: tableTimesMapper()
     };
 
@@ -71,7 +71,7 @@
     function tableTimesMapper(): string[][] {
         const result: string[][] = [];
         for (const time of times) {
-            result.push([time.person.name, String(time.amount)]);
+            result.push([time.person.name, String(time.amount), String(time.total)]);
         }
         return result;
     }
