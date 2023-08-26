@@ -30,7 +30,10 @@ function planEvenly(personArr: Person[], days: Date[]): Match[] {
     let matches: Match[] = [];
     for (const date of days) {
         let pers: CalculatePerson = 
-            persons.find(p => hasPreference(p, date) && isAllowedOnDay(p, date) && p.nextDate <= date && (p.timesPast + p.times) < max)
+            persons.find(p => hasPreference(p, date) && isAllowedOnDay(p, date) && p.nextDate <= date && (p.timesPast + p.times) < min)
+                || persons.find(p => p.nextDate <= date && isAllowedOnDay(p, date) && (p.timesPast + p.times) < min)
+                || persons.find(p => (p.timesPast + p.times) < min)
+                || persons.find(p => hasPreference(p, date) && isAllowedOnDay(p, date) && p.nextDate <= date && (p.timesPast + p.times) < max)
                 || persons.find(p => p.nextDate <= date && isAllowedOnDay(p, date) && (p.timesPast + p.times) < max)
                 || persons.find(p => (p.timesPast + p.times) < max)
                 || persons[0];
