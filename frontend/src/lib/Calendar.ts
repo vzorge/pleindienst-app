@@ -40,5 +40,9 @@ export function createCalendarEvent(date: Date, timeSlot: OverblijfTijd): EventA
         description: 'Pleindienst voor de Montessori Leidscheveen. Als deze tijd u niet schikt, dit graag onderling ruilen',
         location: 'Cicerostrook 1 2493 ZL Den Haag',
         status: 'CONFIRMED',
+        alarms: [
+            { action: 'display', description: 'Reminder', trigger: { hours: 24, minutes: 0, before: true } },
+            { action: 'display', description: 'Reminder', trigger: { hours: 0, minutes: 30, before: true } },
+        ]
     };
 }
