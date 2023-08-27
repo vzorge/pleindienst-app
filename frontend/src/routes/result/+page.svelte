@@ -8,6 +8,8 @@
     import {getVacationDates} from '$lib/data/dates';
     import {browser} from '$app/environment';
 	import { overblijftijd } from '$lib/data/overblijftime';
+	import { createCalendarEvent, downloadCalendarEvent } from '$lib/Calendar';
+	import type { Person } from '$lib/Person';
 
     const options = {
         delimiter: ';'
@@ -22,13 +24,13 @@
     if (browser) {
         resultStore.subscribe((value: MatchingResponse | undefined) => {
             if (value) {
-                matches = value.matches;
+                matches = value.matches.map(m => ({...m, date: new Date(m.date)}));
                 times = value.times;
                 groupName = `${value.group.name}${value.group.number}`;
 
                 csvData = [
-                    ...value.matches.map(m => {
-                        const datum = new Date(m.date);
+                    ...matches.map(m => {
+                        const datum = m.date;
                         return ({
                             'Datum': datum,
                             'Groep': groupName,
@@ -62,7 +64,7 @@
     function tableMatchMapper() {
         const result = [];
         for (const match of matches) {
-            const date = new Date(match.date).toLocaleDateString('nl', {
+            const date = match.date.toLocaleDateString('nl', {
                 weekday: 'long',
                 day: 'numeric',
                 month: 'long',
@@ -83,7 +85,14 @@
 
     function showOverblijfTijd(date: Date) {
         const overblijf = overblijftijd($group, date.getDay());
-        return `${overblijf.van} - ${overblijf.tot}`;
+        return `${overblijf.van[0]}:${String(overblijf.van[1]).padStart(2, '0')} - ${overblijf.tot[0]}:${String(overblijf.tot[1]).padStart(2, '0')}`;
+    }
+
+    function createCalendarEvents(person: Person) {
+        const calendarEvents = matches
+            .filter(m => m.person.name === person.name)
+            .map(m => createCalendarEvent(m.date, overblijftijd($group, m.date.getDay())));
+        downloadCalendarEvent(calendarEvents, person);
     }
 </script>
 
@@ -107,7 +116,35 @@
             <CSVDownloader data="{csvTimes}" bom="{true}" filename="{'pleindienst-' + groupName + "-aantal"}" options="{options}" class="btn variant-soft-secondary">
                 Download aantal keren data
             </CSVDownloader>
-            <Table source="{tableTimes}"></Table>
+            <!-- <Table source="{tableTimes}"></Table> -->
+
+            <div class="table-container">
+                <!-- Times Table  -->
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Naam</th>
+                            <th>Aantal nu</th>
+                            <th>Aantal totaal</th>
+                            <th>Kalender bestand</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#each times as row, i}
+                            <tr>
+                                <td>{row.person.name}</td>
+                                <td>{row.amount}</td>
+                                <td>{row.total}</td>
+                                <td>
+                                    <button class="btn variant-ghost-tertiary" on:click={() => createCalendarEvents(row.person)}>
+                                        Download
+                                    </button>
+                                </td>
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            </div>
             <hr />
             <div class="space-y-2">
                 <p class="opacity-70">Hieronder staat compact de gehele lijst van datums en bijbehorende namen</p>
@@ -115,12 +152,12 @@
                     {#each matches as match (match.date)}
                     <div>
                         <span class="flex-auto">
-                            <dt class="font-bold">{convertWeekDayToStr(new Date(match.date).getDay())} {new Date(match.date).toLocaleDateString("nl-NL")}</dt>
+                            <dt class="font-bold">{convertWeekDayToStr(match.date.getDay())} {match.date.toLocaleDateString("nl-NL")}</dt>
                             <dd class="text-sm">
                                 <div class="flex">
                                     <span class="badge-icon {match.happy ? 'variant-filled-success' : 'variant-filled-error'}">{match.happy ? '+' : '-'}</span>
                                     <span>{match.person.name}</span>
-                                    <span>{showOverblijfTijd(new Date(match.date))}
+                                    <span>{showOverblijfTijd(match.date)}
                                 </div>
                             </dd>
                         </span>

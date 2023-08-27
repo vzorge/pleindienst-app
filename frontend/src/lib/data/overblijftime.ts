@@ -27,16 +27,16 @@ const data: {[key: string]: {[key: string]: string[]}} = {
 }
 
 export type OverblijfTijd = {
-    van: string
-    tot: string
+    van: [number, number]
+    tot: [number, number]
 };
 
 class TimeSlot {
-    public static early: OverblijfTijd = {van: '11.30', tot: '12.00'};
-    public static mid: OverblijfTijd = {van: '12.00', tot: '12.30'};
-    public static late: OverblijfTijd = {van: '12.30', tot: '13.00'};
-    public static midFriday: OverblijfTijd = {van: '12.15', tot: '12.45'};
-    public static lateFriday: OverblijfTijd = {van: '12.45', tot: '13.15'};
+    public static early: OverblijfTijd = {van: [11,30], tot: [12,0]};
+    public static mid: OverblijfTijd = {van: [12,0], tot: [12,30]};
+    public static late: OverblijfTijd = {van: [12,30], tot: [13,0]};
+    public static midFriday: OverblijfTijd = {van: [12,15], tot: [12,45]};
+    public static lateFriday: OverblijfTijd = {van: [12,45], tot: [13,15]};
 }
 
 export function overblijftijd(group: Group, day: WeekDay): OverblijfTijd {

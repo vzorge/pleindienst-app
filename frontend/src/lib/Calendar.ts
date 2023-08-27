@@ -1,47 +1,18 @@
-import {createEvent} from 'ics';
+import {createEvents, type EventAttributes} from 'ics';
+import type { OverblijfTijd } from './data/overblijftime';
+import type { Person } from './Person';
 
-const createEvents = () => {
-    const event = {
-        start: [2018, 5, 30, 6, 30],
-        duration: {hours: 6, minutes: 30},
-        title: 'Bolder Boulder',
-        description: 'Annual 10-kilometer run in Boulder, Colorado',
-        location: 'Folsom Field, University of Colorado (finish line)',
-        url: 'http://www.bolderboulder.com/',
-        geo: {lat: 40.0095, lon: 105.2669},
-        categories: ['10k races', 'Memorial Day Weekend', 'Boulder CO'],
-        status: 'CONFIRMED',
-        busyStatus: 'BUSY',
-        organizer: {name: 'Admin', email: 'Race@BolderBOULDER.com'},
-        attendees: [
-            {
-                name: 'Adam Gibbons',
-                email: 'adam@example.com',
-                rsvp: true,
-                partstat: 'ACCEPTED',
-                role: 'REQ-PARTICIPANT'
-            },
-            {
-                name: 'Brittany Seaton',
-                email: 'brittany@example2.org',
-                dir: 'https://linkedin.com/in/brittanyseaton',
-                role: 'OPT-PARTICIPANT'
-            }
-        ]
-    };
-};
+export async function downloadCalendarEvent(events: EventAttributes[], person: Person) {
 
-async function handleDownload() {
-    const filename = 'ExampleEvent.ics';
-    const file = await new Promise((resolve, reject) => {
-        createEvent(event, (error, value) => {
+    const filename = `Calendar-${person.name}.ics`;
+    const file: File = await new Promise((resolve, reject) => {
+            let {error, value} = createEvents(events);
             if (error) {
                 reject(error);
             }
-
-            resolve(new File([value], filename, {type: 'text/calendar'}));
+            resolve(new File([value!], filename, {type: 'text/calendar'}));
         });
-    });
+    
     const url = URL.createObjectURL(file);
 
     // trying to assign the file URL to a window could cause cross-site
@@ -55,4 +26,19 @@ async function handleDownload() {
     document.body.removeChild(anchor);
 
     URL.revokeObjectURL(url);
+}
+
+
+export function createCalendarEvent(date: Date, timeSlot: OverblijfTijd): EventAttributes {
+
+    return {
+        start: [date.getFullYear(), date.getMonth() + 1, date.getDate(), timeSlot.van[0], timeSlot.van[1]],
+        end: [date.getFullYear(), date.getMonth() + 1, date.getDate(), timeSlot.tot[0], timeSlot.tot[1]],
+        startInputType: 'local',
+        endInputType: 'local',
+        title: 'Overblijfdienst Montessori Leidschenveen',
+        description: 'Pleindienst voor de Montessori Leidscheveen. Als deze tijd u niet schikt, dit graag onderling ruilen',
+        location: 'Cicerostrook 1 2493 ZL Den Haag',
+        status: 'CONFIRMED',
+    };
 }
