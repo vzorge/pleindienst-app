@@ -1,12 +1,13 @@
 <script lang="ts">
     import {Table} from '@skeletonlabs/skeleton';
     import type {Match, MatchingResponse} from '$lib/MatchingResponse';
-    import {resultStore} from '$lib/store';
+    import {group, resultStore} from '$lib/store';
     import CSVDownloader from './CSVDownloader.svelte';
     import {convertWeekDayToStr} from '$lib/WeekDay';
     import type {Times} from '$lib/Times';
     import {getVacationDates} from '$lib/data/dates';
     import {browser} from '$app/environment';
+	import { overblijftijd } from '$lib/data/overblijftime';
 
     const options = {
         delimiter: ';'
@@ -80,6 +81,10 @@
         return result;
     }
 
+    function showOverblijfTijd(date: Date) {
+        const overblijf = overblijftijd($group, date.getDay());
+        return `${overblijf.van} - ${overblijf.tot}`;
+    }
 </script>
 
 <div class="container mx-auto flex grow justify-center items-start mt-10">
@@ -115,6 +120,7 @@
                                 <div class="flex">
                                     <span class="badge-icon {match.happy ? 'variant-filled-success' : 'variant-filled-error'}">{match.happy ? '+' : '-'}</span>
                                     <span>{match.person.name}</span>
+                                    <span>{showOverblijfTijd(new Date(match.date))}
                                 </div>
                             </dd>
                         </span>
