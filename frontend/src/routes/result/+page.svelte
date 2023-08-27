@@ -16,6 +16,7 @@
     let times: Times[] = [];
     let groupName: string;
     let csvData: {};
+    let csvTimes: {Naam: string, Aantal: number, Totaal: number}[] = [];
 
     if (browser) {
         resultStore.subscribe((value: MatchingResponse | undefined) => {
@@ -24,15 +25,16 @@
                 times = value.times;
                 groupName = `${value.group.name}${value.group.number}`;
 
-                csvData = [...value.matches.map(m => {
-                    const datum = new Date(m.date);
-                    return ({
-                        'Datum': datum,
-                        'Groep': groupName,
-                        'Dag': convertWeekDayToStr(datum.getDay()),
-                        'Ouders van:': m.person.name
-                    });
-                }),
+                csvData = [
+                    ...value.matches.map(m => {
+                        const datum = new Date(m.date);
+                        return ({
+                            'Datum': datum,
+                            'Groep': groupName,
+                            'Dag': convertWeekDayToStr(datum.getDay()),
+                            'Ouders van:': m.person.name
+                        });
+                    }),
                     ...getVacationDates(value.group.name)
                         .map(vd => {
                         return ({
@@ -43,7 +45,9 @@
                         });
                     })
                 ].sort((l, r) => l.Datum.getTime() - r.Datum.getTime())
-                 .map(val => ({...val, "Datum": val.Datum.toLocaleDateString('nl-NL')}));
+                .map(val => ({...val, "Datum": val.Datum.toLocaleDateString('nl-NL')}));
+               
+                csvTimes = times.map(val => ({Naam: val.person.name, Aantal: val.amount, Totaal: val.total}));
             }
         });
     }
@@ -95,6 +99,9 @@
             {/if}
             <hr />
             <p class="opacity-70">Onderstaande tabel geeft een overzicht van hoe vaak een naam overblijf dienst heeft. <br/> Deze lijst komt niet mee in de download</p>
+            <CSVDownloader data="{csvTimes}" bom="{true}" filename="{'pleindienst-' + groupName + "-aantal"}" options="{options}" class="btn variant-soft-secondary">
+                Download aantal keren data
+            </CSVDownloader>
             <Table source="{tableTimes}"></Table>
             <hr />
             <div class="space-y-2">
