@@ -6,7 +6,7 @@
     export let bom = false;
     export let options: UnparseConfig | undefined = undefined;
 
-    function download(data: any, filename: string, bom: number) {
+    function download(data: any, filename: string, bom: boolean) {
         const bomCode = bom ? '\ufeff' : '';
         let csvContent = null;
         if (typeof data === 'object') {
@@ -18,8 +18,8 @@
             type: 'text/csv;charset=utf-8;'
         });
         let csvURL = null;
-        if (navigator.msSaveBlob) {
-            csvURL = navigator.msSaveBlob(csvData, `${filename}.csv`);
+        if ((navigator as any).msSaveBlob) {
+            csvURL = (navigator as any).msSaveBlob(csvData, `${filename}.csv`);
         } else {
             csvURL = window.URL.createObjectURL(csvData);
         }
