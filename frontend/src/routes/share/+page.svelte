@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { parseGroup, type Group } from "$lib/Group";
-	import { parse } from "papaparse";
+	import papaparse from "papaparse";
 	import { onMount } from "svelte";
   import downloadImg from '$lib/images/download.svg';
 	import { createCalendarEvent, downloadCalendarEvent } from "$lib/Calendar";
@@ -34,7 +34,7 @@
     //       //TODO error handling
     //   })
     const data: any = await new Promise((resolve) => {
-      parse('/csv/pleindienst-BB1.csv', {
+      papaparse.parse('/csv/pleindienst-BB1.csv', {
         download: true,
         delimiter: ';',
         header: true,
