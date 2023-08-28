@@ -1,5 +1,4 @@
 <script lang="ts">
-    import {Table} from '@skeletonlabs/skeleton';
     import type {Match, MatchingResponse} from '$lib/MatchingResponse';
     import {group, resultStore} from '$lib/store';
     import CSVDownloader from './CSVDownloader.svelte';
@@ -8,7 +7,7 @@
     import {getVacationDates} from '$lib/data/dates';
     import {browser} from '$app/environment';
 	import { overblijftijd } from '$lib/data/overblijftime';
-	import { createCalendarEvent, downloadCalendarEvent } from '$lib/Calendar';
+	import { createCalendarEvent, downloadCalendarEventPerson } from '$lib/Calendar';
 	import type { Person } from '$lib/Person';
 
     const options = {
@@ -50,7 +49,7 @@
                 ].sort((l, r) => l.Datum.getTime() - r.Datum.getTime())
                 .map(val => ({...val, "Datum": val.Datum.toLocaleDateString('nl-NL')}));
                
-                csvTimes = times.map(val => ({Naam: val.person.name, Aantal: val.amount, Totaal: val.total || 0}));
+                csvTimes = times.map(val => ({Naam: val.person.name, Aantal: val.amount, Totaal: val.total}));
             }
         });
     }
@@ -92,7 +91,7 @@
         const calendarEvents = matches
             .filter(m => m.person.name === person.name)
             .map(m => createCalendarEvent(m.date, overblijftijd($group, m.date.getDay())));
-        downloadCalendarEvent(calendarEvents, person);
+        downloadCalendarEventPerson(calendarEvents, person);
     }
 </script>
 

@@ -2,7 +2,11 @@ import {createEvents, type EventAttributes} from 'ics';
 import type { OverblijfTijd } from './data/overblijftime';
 import type { Person } from './Person';
 
-export async function downloadCalendarEvent(events: EventAttributes[], person: Person) {
+export async function downloadCalendarEventPerson(events: EventAttributes[], person: Person) {
+    return downloadCalendarEvent(events, person.name);
+}
+
+export async function downloadCalendarEvent(events: EventAttributes[], person: string) {
 
     const filename = `Calendar-${person.name}.ics`;
     const file: File = await new Promise((resolve, reject) => {

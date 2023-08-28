@@ -59,7 +59,7 @@ function calculateTimes(matches: Match[]): Times[] {
         acc.set(val, (acc.get(val) || 0) + 1);
         return acc;
     }, new Map<Person, number>());
-    const times: Times[] = Array.from(map, ([person, amount]: [Person, number]) => ({ person, amount, total: person.timesPast + amount }))
+    const times: Times[] = Array.from(map, ([person, amount]: [Person, number]) => ({ person, amount, total: (person.timesPast || 0) + amount }))
         .sort((l, r) => r.amount - l.amount);
     return times;
   }
