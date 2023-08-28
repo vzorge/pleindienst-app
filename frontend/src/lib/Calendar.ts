@@ -6,9 +6,9 @@ export async function downloadCalendarEventPerson(events: EventAttributes[], per
     return downloadCalendarEvent(events, person.name);
 }
 
-export async function downloadCalendarEvent(events: EventAttributes[], person: string) {
+export async function downloadCalendarEvent(events: EventAttributes[], name: string) {
 
-    const filename = `Calendar-${person.name}.ics`;
+    const filename = `Calendar-${name}.ics`;
     const file: File = await new Promise((resolve, reject) => {
             let {error, value} = createEvents(events);
             if (error) {
