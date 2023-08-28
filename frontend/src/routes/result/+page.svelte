@@ -50,7 +50,7 @@
                 ].sort((l, r) => l.Datum.getTime() - r.Datum.getTime())
                 .map(val => ({...val, "Datum": val.Datum.toLocaleDateString('nl-NL')}));
                
-                csvTimes = times.map(val => ({Naam: val.person.name, Aantal: val.amount, Totaal: val.total}));
+                csvTimes = times.map(val => ({Naam: val.person.name, Aantal: val.amount, Totaal: val.total || 0}));
             }
         });
     }
