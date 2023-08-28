@@ -15,24 +15,6 @@
   let names: {[key:string]: DataRow[]} = {};
 
   async function getResults() {
-    // const response = await fetch('/csv', {
-    //       method: 'POST',
-    //       body: JSON.stringify({}),
-    //       headers: {
-    //           'Content-Type': 'application/json'
-    //       }
-    //   });
-    //   if (!response.ok) {
-    //         console.log(response);
-    //         // TODO foutafhandeling
-    //   }
-    //   // response.json().then(({ matches, times }) => {
-    //   response.json().then((res) => {
-    //       console.log('haha!');
-    //   }, reason => {
-    //       console.log(reason);
-    //       //TODO error handling
-    //   })
     const data: any = await new Promise((resolve) => {
       papaparse.parse('/csv/pleindienst-BB1.csv', {
         download: true,
