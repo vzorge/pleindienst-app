@@ -9,6 +9,7 @@
 	import { overblijftijd } from '$lib/data/overblijftime';
 	import { createCalendarEvent, downloadCalendarEventPerson } from '$lib/Calendar';
 	import type { Person } from '$lib/Person';
+    import downloadImg from '$lib/images/download.svg';
 
     const options = {
         delimiter: ';'
@@ -135,8 +136,8 @@
                                 <td>{row.amount}</td>
                                 <td>{row.total}</td>
                                 <td>
-                                    <button class="btn variant-ghost-tertiary" on:click={() => createCalendarEvents(row.person)}>
-                                        Download
+                                    <button class="btn btn-icon variant-ghost-tertiary" on:click={() => createCalendarEvents(row.person)}>
+                                        <img src={downloadImg} alt="Download" class="h-3/5"/>
                                     </button>
                                 </td>
                             </tr>
