@@ -29,16 +29,7 @@ function planEvenly(personArr: Person[], days: Date[]): Match[] {
     
     let matches: Match[] = [];
     for (const date of days) {
-        let pers: CalculatePerson = 
-            persons
-                .find(p => hasPreference(p, date) && isAllowedOnDay(p, date) && p.nextDate <= date && (p.timesPast + p.times) < min)
-                || persons.find(p => p.nextDate <= date && isAllowedOnDay(p, date) && (p.timesPast + p.times) < min)
-                || persons.find(p => (p.timesPast + p.times) < min && isAllowedOnDay(p, date)) 
-                || persons.find(p => hasPreference(p, date) && isAllowedOnDay(p, date) && p.nextDate <= date && (p.timesPast + p.times) < max)
-                || persons.find(p => p.nextDate <= date && isAllowedOnDay(p, date) && (p.timesPast + p.times) < max)
-                || persons.find(p => (p.timesPast + p.times) < max && isAllowedOnDay(p, date))
-                || persons.find(p => isAllowedOnDay(p, date))
-                || persons[0]
+        let pers: CalculatePerson = findPersonForDate(persons, date, min, max);
 
         pers.times++;
         pers.nextDate = new Date(date);
@@ -53,6 +44,21 @@ function planEvenly(personArr: Person[], days: Date[]): Match[] {
     matches = tradeDays(matches);
 
     return matches;
+}
+
+function findPersonForDate(persons: CalculatePerson[], date: Date, min: number, max: number): CalculatePerson {
+    const notMax = (p: CalculatePerson, maximum: number) => (p.timesPast + p.times) < maximum
+    const noPref = (p: CalculatePerson, maximum: number) => p.nextDate <= date && notMax(p, maximum)
+    const withPreference = (p: CalculatePerson, maximum: number) => hasPreference(p, date) && noPref(p, maximum)
+
+    const filtered = persons.filter(p => isAllowedOnDay(p, date));
+    return filtered.find(p => withPreference(p, min))
+        || filtered.find(p => noPref(p, min))
+        || filtered.find(p => notMax(p, min)) 
+        || filtered.find(p => withPreference(p, max))
+        || filtered.find(p => noPref(p, max))
+        || filtered.find(p => notMax(p, max)) 
+        || filtered[0]
 }
 
 
