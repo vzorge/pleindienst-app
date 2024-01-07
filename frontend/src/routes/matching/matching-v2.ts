@@ -23,6 +23,7 @@ function planEvenly(personArr: Person[], days: Date[]): Match[] {
     
     const totalCount = days.length + persons.reduce((nr, p) => nr += p.timesPast, 0);
     const totalFractions = persons.reduce((nr, p) => nr += p.fraction, 0);
+    console.log(`totalCount ${totalCount} and totalFractions ${totalFractions}`);
     const [min, max] = [Math.floor(totalCount / totalFractions), Math.floor((totalCount / totalFractions) + 0.99)];
     
     console.log(`Should be between ${min} and ${max}`);
@@ -81,9 +82,16 @@ function findFraction(startFrom: DateLike | undefined, dates: Date[]): number {
     if (fromDate > dates[dates.length - 1]) return 0;
     if (fromDate <= dates[0]) return 1;
 
-    const idx = dates.findIndex((val, idx, arr) => val === fromDate || (val < fromDate && arr[idx] > fromDate));
+    const idx = dates.findIndex((val, idx, arr) => {
+        const currentDate = new Date(val);
+        const nextDate = idx < arr.length - 1 ? new Date(arr[idx + 1]) : Infinity;
 
-    return dates.length / (idx + 1);
+        return fromDate >= currentDate && fromDate < nextDate;
+    });
+
+    console.log(`dates.length: ${dates.length} and index: ${idx} for date: ${fromDate} and fraction: ${(dates.length - idx + 1) / dates.length}`);
+
+    return (dates.length - idx + 1) / dates.length;
 }
 
 function planFixedDates(persons: Person[], days: Date[]): [Date[], Match[]] {
