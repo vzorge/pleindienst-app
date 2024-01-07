@@ -48,7 +48,7 @@ function planEvenly(personArr: Person[], days: Date[]): Match[] {
 }
 
 function findPersonForDate(persons: CalculatePerson[], date: Date, min: number, max: number): CalculatePerson {
-    const notMax = (p: CalculatePerson, maximum: number) => (p.timesPast + p.times) < maximum
+    const notMax = (p: CalculatePerson, maximum: number) => (p.timesPast + p.times) < Math.max(1, (maximum * p.fraction))
     const noPref = (p: CalculatePerson, maximum: number) => p.nextDate <= date && notMax(p, maximum)
     const withPreference = (p: CalculatePerson, maximum: number) => hasPreference(p, date) && noPref(p, maximum)
 
