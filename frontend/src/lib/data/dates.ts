@@ -3,8 +3,8 @@ import vacationDates from './vacationDates.json';
 import {GroupName} from '$lib/GroupName';
 import {WeekDay} from '$lib/WeekDay';
 
-const OB_START_DATE = new Date('2024-02-03');
-const OB_END_DATE = new Date('2024-07-11');
+const OB_START_DATE = new Date('2024-08-26');
+const OB_END_DATE = new Date('2024-09-27');
 
 export function getAvailableDates(groupName: GroupName) {
     return availableDates
