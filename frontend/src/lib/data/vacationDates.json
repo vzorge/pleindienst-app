@@ -1,234 +1,150 @@
 [
   {
-    "date": "2023-10-16",
-    "reason": "Herfstvakantie"
-  },
-  {
-    "date": "2023-10-17",
-    "reason": "Herfstvakantie"
-  },
-  {
-    "date": "2023-10-19",
-    "reason": "Herfstvakantie"
-  },
-  {
-    "date": "2023-10-20",
-    "reason": "Herfstvakantie"
-  },
-  {
-    "date": "2023-10-23",
+    "date": "2024-09-16",
     "reason": "Studiedag"
   },
   {
-    "date": "2023-10-30",
-    "reason": "Extra studiedag"
+    "date": "2024-09-17",
+    "reason": "Prinsjesdag"
   },
   {
-    "date": "2023-12-05",
+    "date": "2024-10-28",
+    "reason": "Herfstvakantie"
+  },
+  {
+    "date": "2024-10-29",
+    "reason": "Herfstvakantie"
+  },
+  {
+    "date": "2024-10-31",
+    "reason": "Herfstvakantie"
+  },
+  {
+    "date": "2024-11-01",
+    "reason": "Herfstvakantie"
+  },
+  {
+    "date": "2024-11-04",
+    "reason": "Studiedag"
+  },
+  {
+    "date": "2024-11-18",
+    "reason": "Studiedag"
+  },
+  {
+    "date": "2024-12-05",
     "reason": "12 uur vrij ivm Sinterklaas"
   },
   {
-    "date": "2023-12-22",
+    "date": "2024-12-20",
     "reason": "12 uur vrij ivm Kerstvakantie"
   },
   {
-    "date": "2023-12-25",
+    "date": "2024-12-23",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2023-12-26",
+    "date": "2024-12-24",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2023-12-28",
+    "date": "2024-12-26",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2023-12-29",
+    "date": "2023-12-27",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2024-01-01",
+    "date": "2024-12-30",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2024-01-02",
+    "date": "2024-12-31",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2024-01-04",
+    "date": "2025-01-02",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2024-01-05",
+    "date": "2025-01-03",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2024-02-16",
+    "date": "2025-02-21",
     "reason": "Extra vrije dag"
   },
   {
-    "date": "2024-02-19",
+    "date": "2025-02-24",
     "reason": "Voorjaarsvakantie"
   },
   {
-    "date": "2024-02-20",
+    "date": "2025-02-25",
     "reason": "Voorjaarsvakantie"
   },
   {
-    "date": "2024-02-22",
+    "date": "2025-02-27",
     "reason": "Voorjaarsvakantie"
   },
   {
-    "date": "2024-02-23",
+    "date": "2025-02-28",
     "reason": "Voorjaarsvakantie"
   },
   {
-    "date": "2024-02-26",
+    "date": "2025-03-03",
     "reason": "Studiedag"
   },
   {
-    "date": "2024-03-29",
-    "reason": "Paasweekeinde"
+    "date": "2025-04-18",
+    "reason": "Goede vrijdag"
   },
   {
-    "date": "2024-04-01",
-    "reason": "2e Paasdag"
-  },
-  {
-    "date": "2024-04-29",
+    "date": "2025-04-21",
     "reason": "Meivakantie"
   },
   {
-    "date": "2024-04-30",
+    "date": "2025-04-22",
     "reason": "Meivakantie"
   },
   {
-    "date": "2024-05-02",
+    "date": "2025-04-24",
     "reason": "Meivakantie"
   },
   {
-    "date": "2024-05-03",
+    "date": "2025-04-25",
     "reason": "Meivakantie"
   },
   {
-    "date": "2024-05-06",
+    "date": "2025-04-28",
     "reason": "Meivakantie"
   },
   {
-    "date": "2024-05-07",
+    "date": "2025-04-29",
     "reason": "Meivakantie"
   },
   {
-    "date": "2024-05-09",
+    "date": "2025-05-01",
     "reason": "Meivakantie"
   },
   {
-    "date": "2024-05-10",
+    "date": "2025-05-02",
     "reason": "Meivakantie"
   },
   {
-    "date": "2024-05-20",
+    "date": "2025-06-09",
     "reason": "2e Pinksterdag"
   },
   {
-    "date": "2024-07-12",
+    "date": "2025-06-10",
+    "reason": "Studiedag"
+  },
+  {
+    "date": "2025-07-18",
     "reason": "12 uur vrij ivm zomervakantie"
   },
   {
-    "date": "2024-07-15",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-07-16",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-07-18",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-07-19",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-07-22",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-07-23",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-07-25",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-07-26",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-07-29",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-07-30",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-01",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-02",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-05",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-06",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-08",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-09",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-12",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-13",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-15",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-16",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-19",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-20",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-22",
-    "reason": "Zomervakantie"
-  },
-  {
-    "date": "2024-08-23",
+    "date": "2025-07-21",
     "reason": "Zomervakantie"
   }
 ]
