@@ -1,13 +1,5 @@
 [
   {
-    "date": "2024-09-16",
-    "reason": "Studiedag"
-  },
-  {
-    "date": "2024-09-17",
-    "reason": "Prinsjesdag"
-  },
-  {
     "date": "2024-10-28",
     "reason": "Herfstvakantie"
   },
@@ -33,11 +25,11 @@
   },
   {
     "date": "2024-12-05",
-    "reason": "12 uur vrij ivm Sinterklaas"
+    "reason": "Sinterklaas"
   },
   {
     "date": "2024-12-20",
-    "reason": "12 uur vrij ivm Kerstvakantie"
+    "reason": "Halve dag ivm kerstvakantie"
   },
   {
     "date": "2024-12-23",
@@ -52,7 +44,7 @@
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2023-12-27",
+    "date": "2024-12-27",
     "reason": "Kerstvakantie"
   },
   {
@@ -132,19 +124,27 @@
     "reason": "Meivakantie"
   },
   {
+    "date": "2025-05-05",
+    "reason": "Bevrijdingsdag"
+  },
+  {
+    "date": "2025-05-29",
+    "reason": "Hemelvaart"
+  },
+  {
+    "date": "2025-05-30",
+    "reason": "Hemelvaart"
+  },
+  {
     "date": "2025-06-09",
-    "reason": "2e Pinksterdag"
+    "reason": "Pinksteren"
   },
   {
     "date": "2025-06-10",
     "reason": "Studiedag"
   },
   {
-    "date": "2025-07-18",
-    "reason": "12 uur vrij ivm zomervakantie"
-  },
-  {
-    "date": "2025-07-21",
-    "reason": "Zomervakantie"
+    "date": "2025-07-17",
+    "reason": "Halve dag laatste schooldag"
   }
 ]
