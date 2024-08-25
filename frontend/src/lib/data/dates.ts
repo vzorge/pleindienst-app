@@ -28,5 +28,5 @@ export function getVacationDates(groupName: GroupName): {date: Date, reason: str
 }
 
 function isOBDate(date: Date) {
-    return date.getTime() > OB_START_DATE.getTime() && date.getTime() <= OB_END_DATE.getTime();
+    return date.getTime() >= OB_START_DATE.getTime() && date.getTime() <= OB_END_DATE.getTime();
 }
