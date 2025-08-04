@@ -1,16 +1,18 @@
 import type { Match } from '$lib/MatchingResponse';
 import type { CalculatePerson, DateLike, Person } from '$lib/Person';
 import type { Times } from '$lib/Times';
-import { splitArrayOn } from './arrayUtils.js';
+import {shuffleArray, splitArrayOn} from './arrayUtils.js';
 import { hasFixedDates, hasPreference, isAllowedOnDay, tradeDays } from './matchingUtils.js';
 
 
-export function matchV2(personArr: Person[], days: Date[]): [Match[], Times[]] {
+export function match(personArr: Person[], days: Date[]): [Match[], Times[]] {
 
     const [fixedDatePersons, nonFixedPersons] = splitArrayOn(personArr, p => hasFixedDates(p, days))
-    let [remainingDays, fixedmatches] = planFixedDates(fixedDatePersons, days);
+    const [remainingDays, fixedMatches] = planFixedDates(fixedDatePersons, days);
 
-    const matches = [...fixedmatches, ...planEvenly(nonFixedPersons, remainingDays)]
+    shuffleArray(nonFixedPersons);
+
+    const matches = [...fixedMatches, ...planEvenly(nonFixedPersons, remainingDays)]
 
     const times = calculateTimes(matches)
 
@@ -22,7 +24,7 @@ function planEvenly(personArr: Person[], days: Date[]): Match[] {
         .sort((l, r) => (l.timesPast || 0) - (r.timesPast || 0))
     
     const totalCount = days.length + persons.reduce((nr, p) => nr += p.timesPast, 0);
-    const totalFractions = persons.reduce((nr, p) => nr += p.fraction, 0);
+    const totalFractions = persons.reduce((nr, p) => nr + p.fraction, 0);
     console.log(`totalCount ${totalCount} and totalFractions ${totalFractions}`);
     const [min, max] = [Math.floor(totalCount / totalFractions), Math.floor((totalCount / totalFractions) + 0.99)];
     
@@ -30,7 +32,7 @@ function planEvenly(personArr: Person[], days: Date[]): Match[] {
     
     let matches: Match[] = [];
     for (const date of days) {
-        let pers: CalculatePerson = findPersonForDate(persons, date, min, max);
+        const pers: CalculatePerson = findPersonForDate(persons, date, min, max);
 
         pers.times++;
         pers.nextDate = new Date(date);
@@ -95,8 +97,8 @@ function findFraction(startFrom: DateLike | undefined, dates: Date[]): number {
 }
 
 function planFixedDates(persons: Person[], days: Date[]): [Date[], Match[]] {
-    let matches: Match[] = [];
-    let remainingDays = [...days];
+    const matches: Match[] = [];
+    const remainingDays = [...days];
     for (const person of persons) {
         for (const dateLike of person.fixedDates || []) {
             const idx = remainingDays.findIndex(d => d.getTime() === new Date(dateLike).getTime());
