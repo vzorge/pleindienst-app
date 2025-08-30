@@ -5,24 +5,24 @@ type Slots = 'early' | 'mid' | 'late' | 'midFriday' | 'lateFriday';
 
 const data: {[key: string]: {[key: string]: string[]}} = {
     [WeekDay.Maandag]: {
-        'early': ['OB1','OB2','MB3','MB6','BB1','BB4'],
-        'mid': ['OB3','OB5','MB2','MB5','BB5','BB6'],
-        'late': ['OB4','OB6','MB1','MB4','BB2','BB3']
+        'early': ['OB1','OB2','MB3','BB1','BB4'],
+        'mid': ['OB3','MB2','MB5','BB5','BB6'],
+        'late': ['OB4','OB5','MB1','MB4','BB2','BB3']
     },
     [WeekDay.Dinsdag]: {
-        'early': ['OB4','OB6','MB2','MB4','BB2','BB5'],
-        'mid': ['OB3','OB5','MB1','MB6','BB1','BB3'],
-        'late': ['OB1','OB2','MB3','MB5','BB4','BB6']
+        'early': ['OB4','OB2','MB2','BB2','BB5'],
+        'mid': ['OB3','OB5','MB1','MB3','BB1','BB3'],
+        'late': ['OB1','MB4','MB5','BB4','BB6']
     },
     [WeekDay.Donderdag]:{
-        'early': ['OB5','OB6','MB1','MB5','BB3','BB6'],
-        'mid': ['OB2','OB3','MB3','MB4','BB2','BB5'],
-        'late': ['OB1','OB4','MB2','MB6','BB1','BB4']
+        'early': ['OB5','MB1','MB5','BB2','BB6'],
+        'mid': ['OB2','OB3','MB3','BB3','BB4'],
+        'late': ['OB1','OB4','MB2','MB4','BB1','BB5']
     },
     [WeekDay.Vrijdag]:{
         'early': [],
-        'midFriday': ['MB1','MB3','MB6','BB1','BB5','BB4'],
-        'lateFriday': ['MB2','MB4','MB5','BB3','BB2','BB6']
+        'midFriday': ['MB1','MB2','MB3','BB1','BB5','BB4'],
+        'lateFriday': ['MB4','MB5','BB3','BB2','BB6']
     },
 }
 
