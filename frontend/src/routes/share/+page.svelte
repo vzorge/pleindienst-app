@@ -6,11 +6,12 @@
 	import { createCalendarEvent, downloadCalendarEvent } from "$lib/Calendar";
 	import { overblijftijd } from "$lib/data/overblijftime";
 
-  const filterValues = ['vakantie', 'tudiedag', '12 uur', 'Paas', '2e', 'vrije dag']
+  const filterValues = ['vakantie', 'studiedag', '12 uur', 'Paas', '2e', 'vrije dag']
 
   const DATE_FIELD = 'Datum';
   const GROUP_FIELD = 'Groep';
   const NAAM_FIELD = 'Ouders van:';
+  const TIJD_FIELD = 'Tijd:';
 
   type DataRow = {date: Date, group: Group, name: string};
 
@@ -39,7 +40,8 @@
       .map((d: any) => ({
         date: new Date(d[DATE_FIELD]), 
         group: parseGroup(d[GROUP_FIELD]),
-        name: d[NAAM_FIELD]
+        name: d[NAAM_FIELD],
+        tijd: d[TIJD_FIELD]
       }))
       .filter((d: DataRow) => !(filterValues.some(val => d.name.includes(val))))
       .reduce(groupBy, {});

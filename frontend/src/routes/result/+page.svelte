@@ -6,7 +6,7 @@
     import type {Times} from '$lib/Times';
     import {getVacationDates} from '$lib/data/dates';
     import {browser} from '$app/environment';
-	import { overblijftijd } from '$lib/data/overblijftime';
+    import {overblijftijd, overblijfTijdToReadableFormat} from '$lib/data/overblijftime';
 	import { createCalendarEvent, downloadCalendarEventPerson } from '$lib/Calendar';
 	import type { Person } from '$lib/Person';
     import downloadImg from '$lib/images/download.svg';
@@ -35,7 +35,8 @@
                             'Datum': datum,
                             'Groep': groupName,
                             'Dag': convertWeekDayToStr(datum.getDay()),
-                            'Ouders van:': m.person.name
+                            'Ouders van:': m.person.name,
+                            'Tijd': overblijfTijdToReadableFormat(overblijftijd(value.group, datum.getDay()))
                         });
                     }),
                     ...getVacationDates(value.group.name)
@@ -44,7 +45,8 @@
                             'Datum': vd.date,
                             'Groep': groupName,
                             'Dag': convertWeekDayToStr(vd.date.getDay()),
-                            'Ouders van:': vd.reason
+                            'Ouders van:': vd.reason,
+                            'Tijd': ''
                         });
                     })
                 ].sort((l, r) => l.Datum.getTime() - r.Datum.getTime())
@@ -85,7 +87,7 @@
 
     function showOverblijfTijd(date: Date) {
         const overblijf = overblijftijd($group, date.getDay());
-        return `${overblijf.van[0]}:${String(overblijf.van[1]).padStart(2, '0')} - ${overblijf.tot[0]}:${String(overblijf.tot[1]).padStart(2, '0')}`;
+        return overblijfTijdToReadableFormat(overblijf);
     }
 
     function createCalendarEvents(person: Person) {

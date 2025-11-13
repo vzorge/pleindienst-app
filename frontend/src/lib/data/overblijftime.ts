@@ -56,4 +56,8 @@ export function overblijftijd(group: Group, day: WeekDay): OverblijfTijd {
    throw new Error();
 }
 
+export function overblijfTijdToReadableFormat(overblijf: OverblijfTijd) {
+    return `${overblijf.van[0]}:${String(overblijf.van[1]).padStart(2, '0')} - ${overblijf.tot[0]}:${String(overblijf.tot[1]).padStart(2, '0')}`;
+}
+
 
