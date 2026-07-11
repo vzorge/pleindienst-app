@@ -7,17 +7,17 @@ const data: {[key: string]: {[key: string]: string[]}} = {
     [WeekDay.Maandag]: {
         'early': ['OB1','OB2','MB3','BB1','BB4'],
         'mid': ['OB3','MB2','MB5','BB5','BB6'],
-        'late': ['OB4','OB5','MB1','MB4','BB2','BB3']
+        'late': ['TB1','OB5','MB1','MB4','BB2','BB3']
     },
     [WeekDay.Dinsdag]: {
-        'early': ['OB4','OB2','MB2','BB2','BB5'],
+        'early': ['TB1','OB2','MB2','BB2','BB5'],
         'mid': ['OB3','OB5','MB1','MB3','BB1','BB3'],
         'late': ['OB1','MB4','MB5','BB4','BB6']
     },
     [WeekDay.Donderdag]:{
         'early': ['OB5','MB1','MB5','BB2','BB6'],
         'mid': ['OB2','OB3','MB3','BB3','BB4'],
-        'late': ['OB1','OB4','MB2','MB4','BB1','BB5']
+        'late': ['OB1','TB1','MB2','MB4','BB1','BB5']
     },
     [WeekDay.Vrijdag]:{
         'early': [],
@@ -32,6 +32,7 @@ export type OverblijfTijd = {
 };
 
 class TimeSlot {
+    public static unknownTime: OverblijfTijd = {van: [11,30], tot: [13,0]};
     public static early: OverblijfTijd = {van: [11,30], tot: [12,0]};
     public static mid: OverblijfTijd = {van: [12,0], tot: [12,30]};
     public static late: OverblijfTijd = {van: [12,30], tot: [13,0]};
@@ -40,7 +41,7 @@ class TimeSlot {
 }
 
 export function overblijftijd(group: Group, day: WeekDay): OverblijfTijd {
-   for (let [slot, groups] of Object.entries(data[day])) {
+   for (const [slot, groups] of Object.entries(data[day])) {
         if (groups.includes(group.name+group.number)) {
             switch(slot as Slots) {
                 case "early": return TimeSlot.early;
@@ -53,11 +54,11 @@ export function overblijftijd(group: Group, day: WeekDay): OverblijfTijd {
    }
 
    console.log(`Geen tijdslot gevonden voor ${group.name+group.number} op ${day}`);
-   throw new Error();
+   return TimeSlot.unknownTime;
 }
 
 export function overblijfTijdToReadableFormat(overblijf: OverblijfTijd) {
-    return `${overblijf.van[0]}:${String(overblijf.van[1]).padStart(2, '0')} - ${overblijf.tot[0]}:${String(overblijf.tot[1]).padStart(2, '0')}`;
+    return overblijf === TimeSlot.unknownTime ? '' : `${overblijf.van[0]}:${String(overblijf.van[1]).padStart(2, '0')} - ${overblijf.tot[0]}:${String(overblijf.tot[1]).padStart(2, '0')}`;
 }
 
 

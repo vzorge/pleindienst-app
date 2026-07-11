@@ -3,14 +3,18 @@ import vacationDates from './vacationDates.json';
 import {GroupName} from '$lib/GroupName';
 import {WeekDay} from '$lib/WeekDay';
 
-const OB_START_DATE = new Date('2026-02-01');
-const OB_END_DATE = new Date('2026-07-16');
+const OB_START_DATE = new Date('2026-08-31'); // inclusive
+const OB_END_DATE = new Date('2027-01-29'); // inclusive
 
 export function getAvailableDates(groupName: GroupName) {
     return availableDates
         .map(d => new Date(d))
         .filter(date => {
-            return groupName === GroupName.OB ? isOBDate(date) && date.getDay() !== WeekDay.Vrijdag : true;
+            switch(groupName) {
+                case GroupName.OB: return isOBDate(date) && date.getDay() !== WeekDay.Vrijdag;
+                case GroupName.TB: return date.getDay() !== WeekDay.Vrijdag;
+                default: return true;
+            }
         });
 }
 

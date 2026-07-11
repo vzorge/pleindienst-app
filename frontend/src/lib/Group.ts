@@ -15,3 +15,10 @@ export function parseGroup(s: string): Group {
 
     return {name, number};
 }
+
+export const availableNumbersPerGroup = {
+    'OB': [1, 2, 3],
+    'TB': [1],
+    'MB': [1, 2, 3, 4, 5],
+    'BB': [1, 2, 3, 4, 5, 6]
+}

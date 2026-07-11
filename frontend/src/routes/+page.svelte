@@ -7,7 +7,7 @@
     import {GroupName} from '$lib/GroupName.js';
     import {group, persons, resultStore} from '$lib/store';
     import {goto} from '$app/navigation';
-    import type {Group} from '$lib/Group';
+    import {availableNumbersPerGroup, type Group} from '$lib/Group';
 	import type { Match } from '$lib/MatchingResponse';
 
     const mbBbWeekDays = [WeekDay.Maandag, WeekDay.Dinsdag, WeekDay.Donderdag, WeekDay.Vrijdag];
@@ -17,7 +17,8 @@
     $group;
     $resultStore;
 
-    $: availableWeekDays = $group.name === GroupName.OB ? obBbWeekDays : mbBbWeekDays;
+    $: availableWeekDays = $group.name === GroupName.OB || $group.name === GroupName.TB ? obBbWeekDays : mbBbWeekDays;
+    $: availableGroups = availableNumbersPerGroup;
 
     function openChildDialog() {
         new Promise<Person[]>((resolve) => {
@@ -116,16 +117,16 @@
         <span class="label">Welke groep wordt ingedeeld?</span>
         <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary" display="flex">
             <RadioItem bind:group={$group.name} name="justify" value="{GroupName.OB}" class="grow">OB</RadioItem>
+            <RadioItem bind:group={$group.name} name="justify" value="{GroupName.TB}" class="grow">TB</RadioItem>
             <RadioItem bind:group={$group.name} name="justify" value="{GroupName.MB}" class="grow">MB</RadioItem>
             <RadioItem bind:group={$group.name} name="justify" value="{GroupName.BB}" class="grow">BB</RadioItem>
         </RadioGroup>
         <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary" display="flex">
-            <RadioItem bind:group={$group.number} name="justify" value="{1}" class="grow">1</RadioItem>
-            <RadioItem bind:group={$group.number} name="justify" value="{2}" class="grow">2</RadioItem>
-            <RadioItem bind:group={$group.number} name="justify" value="{3}" class="grow">3</RadioItem>
-            <RadioItem bind:group={$group.number} name="justify" value="{4}" class="grow">4</RadioItem>
-            <RadioItem bind:group={$group.number} name="justify" value="{5}" class="grow">5</RadioItem>
-            <RadioItem bind:group={$group.number} name="justify" value="{6}" class="grow">6</RadioItem>
+            {#if !!$group.name}
+                {#each availableGroups[$group.name] as availableGroupNumber}
+                    <RadioItem bind:group={$group.number} name="justify" value="{availableGroupNumber}" class="grow">{availableGroupNumber}</RadioItem>
+                {/each}
+            {/if}
         </RadioGroup>
         <button class="btn btn-sm variant-ghost-secondary self-end" on:click={openChildDialog}>Kinderen beheren</button>
 

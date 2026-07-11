@@ -1,155 +1,159 @@
 [
   {
-    "date": "2025-09-15",
+    "date": "2026-09-14",
     "reason": "Studiedag"
   },
   {
-    "date": "2025-09-16",
+    "date": "2026-09-15",
     "reason": "Prinsjesdag"
   },
   {
-    "date": "2025-10-20",
+    "date": "2026-10-19",
     "reason": "Herfstvakantie"
   },
   {
-    "date": "2025-10-21",
+    "date": "2026-10-20",
     "reason": "Herfstvakantie"
   },
   {
-    "date": "2025-10-23",
+    "date": "2026-10-22",
     "reason": "Herfstvakantie"
   },
   {
-    "date": "2025-10-24",
+    "date": "2026-10-23",
     "reason": "Herfstvakantie"
   },
   {
-    "date": "2025-11-21",
+    "date": "2026-11-13",
     "reason": "Studiedag"
   },
   {
-    "date": "2025-12-05",
+    "date": "2026-11-16",
+    "reason": "Studiedag"
+  },
+  {
+    "date": "2026-12-04",
     "reason": "12 uur vrij ivm Sinterklaas"
   },
   {
-    "date": "2025-12-19",
+    "date": "2026-12-18",
     "reason": "12 uur vrij ivm Kerst"
   },
   {
-    "date": "2025-12-22",
+    "date": "2026-12-21",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2025-12-23",
+    "date": "2026-12-22",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2025-12-25",
+    "date": "2026-12-24",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2025-12-26",
+    "date": "2026-12-25",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2025-12-29",
+    "date": "2026-12-28",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2025-12-30",
+    "date": "2026-12-29",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2026-01-01",
+    "date": "2026-12-31",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2026-01-02",
+    "date": "2027-01-01",
     "reason": "Kerstvakantie"
   },
   {
-    "date": "2026-02-13",
+    "date": "2027-02-19",
     "reason": "Extra vrije dag"
   },
   {
-    "date": "2026-02-16",
+    "date": "2027-02-22",
     "reason": "Voorjaarsvakantie"
   },
   {
-    "date": "2026-02-17",
+    "date": "2027-02-23",
     "reason": "Voorjaarsvakantie"
   },
   {
-    "date": "2026-02-19",
+    "date": "2027-02-25",
     "reason": "Voorjaarsvakantie"
   },
   {
-    "date": "2026-02-20",
+    "date": "2027-02-26",
     "reason": "Voorjaarsvakantie"
   },
   {
-    "date": "2026-03-12",
-    "reason": "Studiedag"
-  },
-  {
-    "date": "2026-04-03",
+    "date": "2027-03-26",
     "reason": "Paasweekeinde"
   },
   {
-    "date": "2026-04-06",
+    "date": "2027-03-29",
     "reason": "Paasweekeinde"
   },
   {
-    "date": "2026-04-27",
+    "date": "2027-04-26",
     "reason": "Meivakantie"
   },
   {
-    "date": "2026-04-28",
+    "date": "2027-04-27",
     "reason": "Meivakantie"
   },
   {
-    "date": "2026-04-30",
+    "date": "2027-04-29",
     "reason": "Meivakantie"
   },
   {
-    "date": "2026-05-01",
+    "date": "2027-04-30",
     "reason": "Meivakantie"
   },
   {
-    "date": "2026-05-04",
+    "date": "2027-05-03",
     "reason": "Meivakantie"
   },
   {
-    "date": "2026-05-05",
+    "date": "2027-05-04",
     "reason": "Meivakantie"
   },
   {
-    "date": "2026-05-07",
+    "date": "2027-05-06",
     "reason": "Meivakantie"
   },
   {
-    "date": "2026-05-08",
+    "date": "2027-05-07",
     "reason": "Meivakantie"
   },
   {
-    "date": "2026-05-14",
-    "reason": "Hemelvaart"
-  },
-  {
-    "date": "2026-05-15",
-    "reason": "Hemelvaart"
-  },
-  {
-    "date": "2026-05-25",
+    "date": "2027-05-17",
     "reason": "Pinksteren"
   },
   {
-    "date": "2026-06-09",
+    "date": "2027-05-18",
     "reason": "Studiedag"
   },
   {
-    "date": "2026-07-17",
-    "reason": "Halve dag laatste schooldag"
+    "date": "2027-06-11",
+    "reason": "Studiedag"
+  },
+  {
+    "date": "2027-06-14",
+    "reason": "Studiedag"
+  },
+  {
+    "date": "2027-07-16",
+    "reason": "12 uur vrij"
+  },
+  {
+    "date": "2027-07-19",
+    "reason": "Zomervakantie"
   }
 ]
 

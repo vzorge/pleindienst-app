@@ -115,7 +115,7 @@
             {/if}
             <hr />
             <p class="opacity-70">Onderstaande tabel geeft een overzicht van hoe vaak een naam overblijf dienst heeft. <br/> Deze lijst komt niet mee in de download</p>
-            <CSVDownloader data="{csvTimes}" bom="{true}" filename="{'pleindienst-' + groupName + "-aantal"}" options="{options}" class="btn variant-soft-secondary">
+            <CSVDownloader data="{csvTimes}" bom="{true}" filename="{'pleindienst-' + groupName + '-aantal'}'" options="{options}" class="btn variant-soft-secondary">
                 Download aantal keren data
             </CSVDownloader>
             <!-- <Table source="{tableTimes}"></Table> -->
@@ -159,7 +159,7 @@
                                 <div class="flex">
                                     <span class="badge-icon {match.happy ? 'variant-filled-success' : 'variant-filled-error'}">{match.happy ? '+' : '-'}</span>
                                     <span>{match.person.name}</span>
-                                    <span>{showOverblijfTijd(match.date)}
+                                    <span>{showOverblijfTijd(match.date)}</span>
                                 </div>
                             </dd>
                         </span>
