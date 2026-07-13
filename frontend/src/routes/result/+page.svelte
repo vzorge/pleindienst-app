@@ -35,8 +35,8 @@
                             'Datum': datum,
                             'Groep': groupName,
                             'Dag': convertWeekDayToStr(datum.getDay()),
-                            'Ouders van:': m.person.name,
-                            'Tijd': overblijfTijdToReadableFormat(overblijftijd(value.group, datum.getDay()))
+                            'Ouders van:': m.person.name
+                            // 'Tijd': overblijfTijdToReadableFormat(overblijftijd(value.group, datum.getDay()))
                         });
                     }),
                     ...getVacationDates(value.group.name)
@@ -45,8 +45,8 @@
                             'Datum': vd.date,
                             'Groep': groupName,
                             'Dag': convertWeekDayToStr(vd.date.getDay()),
-                            'Ouders van:': vd.reason,
-                            'Tijd': ''
+                            'Ouders van:': vd.reason
+                            // 'Tijd': ''
                         });
                     })
                 ].sort((l, r) => l.Datum.getTime() - r.Datum.getTime())
